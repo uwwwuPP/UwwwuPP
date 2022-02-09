@@ -65,9 +65,6 @@ std::string ReplaceButKeepCapitalization(
         const std::string foundInText_lower = StringTools::Lower(foundInText);
         if (foundInText_lower == find)
         {
-            // Advance i accordingly
-            i += foundInText.length()-1;
-
             // Ask the callback if we should replace this one
             if (onlyIf(foundInText, i))
             {
@@ -135,6 +132,9 @@ std::string ReplaceButKeepCapitalization(
                 // We do not have an occurrence... just insert the char as is
                 ss << str[i];
             }
+
+            // Advance i accordingly
+            i += foundInText.length()-1;
         }
         else
         {
@@ -169,7 +169,7 @@ std::string MakeUwu(std::string boringString) {
                     return false;
 
                 // Only replace if the next char is a vowel
-                const char nextChar = MakeLower(boringString[index + found.length()-1]);
+                const char nextChar = MakeLower(boringString[index + found.length()]);
 
                 // Is this a vowel?
                 if (IsVowel(nextChar))
@@ -219,7 +219,7 @@ std::string MakeUwu(std::string boringString) {
 
                 // Only replace if the last char is not a vowel
                 const char lastChar = MakeLower(boringString[index - 1]);
-                const char nextChar = MakeLower(boringString[index + found.length()-1]);
+                const char nextChar = MakeLower(boringString[index + found.length()]);
 
                 // Is the next char a letter?
                 if (!((lastChar >= 'a') && (nextChar <= 'z')))
@@ -246,7 +246,7 @@ std::string MakeUwu(std::string boringString) {
                     return false;
 
                 const char lastChar = MakeLower(boringString[index - 1]);
-                const char nextChar = MakeLower(boringString[index + found.length()-1]);
+                const char nextChar = MakeLower(boringString[index + found.length()]);
 
                 return (lastChar != 'l') && (nextChar != 'l');
             }
@@ -262,7 +262,7 @@ std::string MakeUwu(std::string boringString) {
                 if (boringString.length() < found.length())
                     return false;
 
-                const char nextChar = MakeLower(boringString[index + found.length()-1]);
+                const char nextChar = MakeLower(boringString[index + found.length()]);
 
                 return IsVowel(nextChar);
             }
@@ -279,7 +279,7 @@ std::string MakeUwu(std::string boringString) {
                 if (index == boringString.length() - 1)
                     return true;
 
-                const char nextChar = MakeLower(boringString[index + found.length()-1]);
+                const char nextChar = MakeLower(boringString[index + found.length()]);
 
                 return nextChar != '?';
             }

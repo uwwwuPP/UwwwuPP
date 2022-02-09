@@ -66,9 +66,6 @@ std::string ReplaceButKeepCapitalization(
                 // We have three possible cases:
                 // 1: len(find) == len(sub), in this case we want to sync capitalization by index.
                 // 2: len(find) < len(sub), in this case we sync by index, BUT...
-                //  2.1: len(sub) - len(find) == 1, ...following characters of sub are lowercase
-                //  2.1: len(sub) - len(find) > 1, ...following characters of sub are the same case as the following char.
-                //      Take find[-1] instead, if the following char is not a letter
                 // 3: len(find) > len(sub): sync capitalization by index
 
                 // We want to sync capitalization by index
@@ -104,21 +101,7 @@ std::string ReplaceButKeepCapitalization(
                         }
                     }
 
-                    // ... following characters of sub are lowercase, or the same sign of the following character
-                    if (sub.length() - foundInText.length() == 1)
-                    {
-                        ss << CopySign(foundInText[0], sub[0]);
 
-                        for (std::size_t j = 1; j < sub.length(); j++)
-                        {
-                            const char charSignToUse = doHaveFollowingChar ? followingCharsSign : LOWERCASE;
-                            ss << CopySign(charSignToUse, sub[j]);
-                        }
-                    }
-
-                    // ...following characters of sub are the same case as the following char.
-                    //    Take find[-1] instead, if the following char is not a letter
-                    else if (sub.length() - foundInText.length() > 1)
                     {
                         char lastCharCharSign = 0;
 
@@ -160,8 +143,8 @@ std::string MakeUwu(std::string boringString) {
 
     // Slightly more complex... Multichar replacements, but we have to keep capitalization...
     boringString = ReplaceButKeepCapitalization(boringString, "th", "tw");
-    boringString = ReplaceButKeepCapitalization(boringString, "you", "chou");
     boringString = ReplaceButKeepCapitalization(boringString, "ove", "uv");
+    boringString = ReplaceButKeepCapitalization(boringString, "have", "haf");
     boringString = ReplaceButKeepCapitalization(boringString, "up", "uwp");
 
     // Replace N with Ny, but only if succeeded by a vowel
@@ -196,9 +179,9 @@ std::string MakeUwu(std::string boringString) {
             "w",
             [boringString](const std::string& found, int index)
             {
-                // Do replace, if we are on the first char
+                // Don't replace, if we are on the first char
                 if (index == 0)
-                    return true;
+                    return false;
 
                 // Only replace if the last char is not a vowel
                 const std::string vowels = "euioa";
@@ -214,20 +197,28 @@ std::string MakeUwu(std::string boringString) {
             }
         );
 
-    // Replace R with nothing, but only if preceded by a vowel
+    // Replace R with nothing, but only if preceded by a vowel, and (not succeeded by a non-letter or eof)
     boringString = ReplaceButKeepCapitalization(
             boringString,
             "r",
             "",
             [boringString](const std::string& found, int index)
             {
-                // Do replace, if we are on the first char
-                if (index == 0)
-                    return true;
+                // Don't replace, if we are on the last char
+                if (index == boringString.length() - 1)
+                    return false;
+
+                if ((index == 0) ||(index == boringString.length() - 1))
+                    return false;
 
                 // Only replace if the last char is not a vowel
                 const std::string vowels = "euioa";
                 const char lastChar = MakeLower(boringString[index - 1]);
+                const char nextChar = MakeLower(boringString[index + found.length()]);
+
+                // Is the next char a letter?
+                if (!((lastChar >= 'a') && (nextChar <= 'z')))
+                    return false;
 
                 // Is this a vowel?
                 for (const char vowel : vowels)
@@ -251,6 +242,23 @@ std::string MakeUwu(std::string boringString) {
                 const char nextChar = MakeLower(boringString[index + found.length()]);
 
                 return (lastChar != 'l') && (nextChar != 'l');
+            }
+    );
+
+    // Replace ? with ..., but only if not followed by another ?
+    boringString = ReplaceButKeepCapitalization(
+            boringString,
+            "?",
+            "?? tell me! >:(",
+            [boringString](const std::string& found, int index)
+            {
+                // Do replace, if we are on the last char
+                if (index == boringString.length() - 1)
+                    return true;
+
+                const char nextChar = MakeLower(boringString[index + found.length()]);
+
+                return nextChar != '?';
             }
     );
 

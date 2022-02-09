@@ -264,11 +264,23 @@ std::string MakeUwu(std::string boringString) {
     return boringString;
 }
 
-int main() {
+int main(int argc, char** argv) {
 
-    std::string buf;
-    while (std::getline(std::cin, buf))
-        std::cout << MakeUwu(buf) << std::endl;
+    // We have arguments. Uwwuifie these instead
+    if (argc > 1)
+    {
+        for (std::size_t i = 1; i < argc; i++)
+            std::cout << MakeUwu(argv[i]) + " ";
+
+        std::cout << std::endl;
+    }
+    // Else, be prepared to get __piped__
+    else
+    {
+        std::string buf;
+        while (std::getline(std::cin, buf))
+            std::cout << MakeUwu(buf) << std::endl;
+    }
 
     return 0;
 }

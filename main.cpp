@@ -7,6 +7,15 @@
 constexpr char UPPERCASE = (1<<5);
 constexpr char LOWERCASE = 0;
 
+bool IsVowel(char c) {
+    const std::string vowels = "euioa";
+    for (const char vowel : vowels)
+        if (vowel == c)
+            return true;
+
+    return false;
+}
+
 bool IsUpper(char c) {
     return !(c & (1<<5));
 }
@@ -145,6 +154,7 @@ std::string MakeUwu(std::string boringString) {
     boringString = ReplaceButKeepCapitalization(boringString, "th", "tw");
     boringString = ReplaceButKeepCapitalization(boringString, "ove", "uv");
     boringString = ReplaceButKeepCapitalization(boringString, "have", "haf");
+    boringString = ReplaceButKeepCapitalization(boringString, "tr", "tw");
     boringString = ReplaceButKeepCapitalization(boringString, "up", "uwp");
 
     // Replace N with Ny, but only if succeeded by a vowel
@@ -159,13 +169,11 @@ std::string MakeUwu(std::string boringString) {
                     return false;
 
                 // Only replace if the next char is a vowel
-                const std::string vowels = "euioa";
-                const char nextChar = MakeLower(boringString[index + found.length()]);
+                const char nextChar = MakeLower(boringString[index + found.length()-1]);
 
                 // Is this a vowel?
-                for (const char vowel : vowels)
-                    if (vowel == nextChar)
-                        return true;
+                if (IsVowel(nextChar))
+                    return true;
 
                 // Else, don't replace
                 return false;
@@ -184,13 +192,11 @@ std::string MakeUwu(std::string boringString) {
                     return false;
 
                 // Only replace if the last char is not a vowel
-                const std::string vowels = "euioa";
                 const char lastChar = MakeLower(boringString[index - 1]);
 
                 // Is this a vowel?
-                for (const char vowel : vowels)
-                    if (vowel == lastChar)
-                        return false;
+                if (IsVowel(lastChar))
+                    return false;
 
                 // Else, replace
                 return true;
@@ -212,18 +218,16 @@ std::string MakeUwu(std::string boringString) {
                     return false;
 
                 // Only replace if the last char is not a vowel
-                const std::string vowels = "euioa";
                 const char lastChar = MakeLower(boringString[index - 1]);
-                const char nextChar = MakeLower(boringString[index + found.length()]);
+                const char nextChar = MakeLower(boringString[index + found.length()-1]);
 
                 // Is the next char a letter?
                 if (!((lastChar >= 'a') && (nextChar <= 'z')))
                     return false;
 
                 // Is this a vowel?
-                for (const char vowel : vowels)
-                    if (vowel == lastChar)
-                        return true;
+                if (IsVowel(lastChar))
+                    return true;
 
                 // Else, don't replace
                 return false;
@@ -238,10 +242,29 @@ std::string MakeUwu(std::string boringString) {
             "w",
             [boringString](const std::string& found, int index)
             {
+                if (boringString.length() < found.length() + 2)
+                    return false;
+
                 const char lastChar = MakeLower(boringString[index - 1]);
-                const char nextChar = MakeLower(boringString[index + found.length()]);
+                const char nextChar = MakeLower(boringString[index + found.length()-1]);
 
                 return (lastChar != 'l') && (nextChar != 'l');
+            }
+    );
+
+    // Replace LL with WW, but only if followed by a vowel
+    boringString = ReplaceButKeepCapitalization(
+            boringString,
+            "ll",
+            "ww",
+            [boringString](const std::string& found, int index)
+            {
+                if (boringString.length() < found.length())
+                    return false;
+
+                const char nextChar = MakeLower(boringString[index + found.length()-1]);
+
+                return IsVowel(nextChar);
             }
     );
 
@@ -256,7 +279,7 @@ std::string MakeUwu(std::string boringString) {
                 if (index == boringString.length() - 1)
                     return true;
 
-                const char nextChar = MakeLower(boringString[index + found.length()]);
+                const char nextChar = MakeLower(boringString[index + found.length()-1]);
 
                 return nextChar != '?';
             }
@@ -268,6 +291,12 @@ std::string MakeUwu(std::string boringString) {
     boringString = StringTools::Replace(boringString, ":-)", "UwwwU :D");
     boringString = StringTools::Replace(boringString, "lol", "XDD");
     boringString = StringTools::Replace(boringString, "^^", "^.^ UwU");
+    boringString = StringTools::Replace(boringString, "thank you", "youwe twe best <3333 xoxo");
+    boringString = StringTools::Replace(boringString, "thanks", "youwe twe best :D xoxo");
+    boringString = StringTools::Replace(boringString, "thank's", "youwe twe best <3 uwu");
+    boringString = StringTools::Replace(boringString, "hello", "Hiiiiiii");
+    boringString = StringTools::Replace(boringString, "c++", "c++ (rust is hella cutewr btw ^^)");
+    boringString = StringTools::Replace(boringString, "C++", "C++ (rust is hella cutewr btw ^^)");
 
     return boringString;
 }

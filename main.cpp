@@ -7,8 +7,7 @@
 constexpr char UPPERCASE = (1<<5);
 constexpr char LOWERCASE = 0;
 
-bool IsVowel(char c) {
-    const std::string vowels = "euioa";
+bool IsVowel(char c, const std::string vowels = "euioa") {
     for (const char vowel : vowels)
         if (vowel == c)
             return true;
@@ -157,7 +156,7 @@ std::string MakeUwu(std::string boringString) {
     boringString = ReplaceButKeepCapitalization(boringString, "tr", "tw");
     boringString = ReplaceButKeepCapitalization(boringString, "up", "uwp");
 
-    // Replace N with Ny, but only if succeeded by a vowel
+    // Replace N with Ny, but only if succeeded by a
     boringString = ReplaceButKeepCapitalization(
             boringString,
             "n",

@@ -239,7 +239,7 @@ std::string MakeUwu(std::string boringString) {
             }
     );
 
-    // Replace R with W, but only if not succeeded by a non-vowel
+    // Replace R with W, but only if not succeeded by a non-vowel, and if it's not the first character of a word
     boringString = ReplaceButKeepSigns(
             boringString,
             "r",
@@ -249,11 +249,20 @@ std::string MakeUwu(std::string boringString) {
                 if (index + found.length() == boringString.length() - 1)
                     return false;
 
+                // Don't replace if we're at index 0
+                if (index == 0)
+                    return false;
+
                 // Only replace if the next char is a vowel
                 const char nextChar = MakeLower(boringString[index + found.length()]);
+                const char lastChar = MakeLower(boringString[index - 1]);
 
                 // Is this a non-vowel?
                 if (!IsVowel(nextChar))
+                    return false;
+
+                // Don't replace if the last char is not a letter
+                if (!IsLetter(lastChar))
                     return false;
 
                 // Else, replace
@@ -261,17 +270,26 @@ std::string MakeUwu(std::string boringString) {
             }
     );
 
-    // Replace L with W, but only if not followed or preceded by another L
+    // Replace L with W, but only if not followed or preceded by another L, and if it's not the first character of a word
     boringString = ReplaceButKeepSigns(
             boringString,
             "l",
             "w",
             [boringString](const std::string &found, int index) {
+                // Our segment has to be at least two characters long
                 if (boringString.length() < found.length() + 2)
+                    return false;
+
+                // Don't replace if we're at index o
+                if (index == 0)
                     return false;
 
                 const char lastChar = MakeLower(boringString[index - 1]);
                 const char nextChar = MakeLower(boringString[index + found.length()]);
+
+                // Don't replace if the last char is not a letter
+                if (!IsLetter(lastChar))
+                    return false;
 
                 return (lastChar != 'l') && (nextChar != 'l');
             }

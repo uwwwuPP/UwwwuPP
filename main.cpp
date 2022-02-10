@@ -6,9 +6,13 @@
 #include <algorithm>
 #include <random>
 
+//! Generic uppercase character
 constexpr char UPPERCASE = (1<<5);
+
+//! Generic lowercase character
 constexpr char LOWERCASE = 0;
 
+//! Checks whether or not `c` is a vowel. You can define custom vowel characters.
 bool IsVowel(const char c, const std::string& vowels = "euioay") {
     return std::any_of(
             vowels.cbegin(),
@@ -19,10 +23,12 @@ bool IsVowel(const char c, const std::string& vowels = "euioay") {
         );
 }
 
+//! Checks whether or not `c` is an uppercase character
 bool IsUpper(const char c) {
     return !(c & (1<<5));
 }
 
+//! Will return `c` as an uppercase character
 char MakeUpper(char c) {
     if (IsUpper(c))
         return c;
@@ -30,6 +36,7 @@ char MakeUpper(char c) {
         return c & ~(1<<5);
 }
 
+//! Will return `c` as a lowercase character
 char MakeLower(char c) {
     if (!IsUpper(c))
         return c;
@@ -37,6 +44,7 @@ char MakeLower(char c) {
         return c | (1<<5);
 }
 
+//! Will return `c` with the same capitalization as `sign`.
 char CopySign(char sign, char c) {
     if (IsUpper(sign))
         return MakeUpper(c);
@@ -44,11 +52,18 @@ char CopySign(char sign, char c) {
         return MakeLower(c);
 }
 
-std::string ReplaceButKeepCapitalization(
+//! Will replace all occurrences of a substring `find` in `str` with `sub`, but it will try to keep the characters signs.
+//! Like (pay attention to the capitalization):.
+//! ("Hello World", "hello", "hi") -> "Hi World".
+//! ("hello World", "hello", "hi") -> "hi World".
+//! ("HELLO World", "hello", "hi") -> "HI World".
+//! You can also supply a callback to only perform a replacement if certain conditions apply.
+std::string ReplaceButKeepSigns(
         const std::string& str,
         std::string find,
         const std::string& sub,
-        const std::function<bool(const std::string&, const std::size_t)>& onlyIf = [](const std::string&, const std::size_t){return true;}
+        const std::function<bool(const std::string&, const std::size_t)>& onlyIf = [](const std::string &,
+                                                                                      const std::size_t) { return true; } // Default is: replace always
 ) {
 
     // Quick accepts-and rejects
@@ -154,19 +169,18 @@ std::string MakeUwu(std::string boringString) {
     // none, lol
 
     // Slightly more complex... Multichar replacements, but we have to keep capitalization...
-    boringString = ReplaceButKeepCapitalization(boringString, "th", "tw");
-    boringString = ReplaceButKeepCapitalization(boringString, "ove", "uv");
-    boringString = ReplaceButKeepCapitalization(boringString, "have", "haf");
-    boringString = ReplaceButKeepCapitalization(boringString, "tr", "tw");
-    boringString = ReplaceButKeepCapitalization(boringString, "up", "uwp");
+    boringString = ReplaceButKeepSigns(boringString, "th", "tw");
+    boringString = ReplaceButKeepSigns(boringString, "ove", "uv");
+    boringString = ReplaceButKeepSigns(boringString, "have", "haf");
+    boringString = ReplaceButKeepSigns(boringString, "tr", "tw");
+    boringString = ReplaceButKeepSigns(boringString, "up", "uwp");
 
     // Replace N with Ny, but only if succeeded by a
-    boringString = ReplaceButKeepCapitalization(
+    boringString = ReplaceButKeepSigns(
             boringString,
             "n",
             "ny",
-            [boringString](const std::string& found, int index)
-            {
+            [boringString](const std::string &found, int index) {
                 // Don't replace, if we are on the last char
                 if (index == boringString.length() - 1)
                     return false;
@@ -184,18 +198,17 @@ std::string MakeUwu(std::string boringString) {
     );
 
     // Replace R with W, but only if not succeeded by a non-vowel
-    boringString = ReplaceButKeepCapitalization(
+    boringString = ReplaceButKeepSigns(
             boringString,
             "r",
             "w",
-            [boringString](const std::string& found, const std::size_t index)
-            {
+            [boringString](const std::string &found, const std::size_t index) {
                 // Don't replace, if we are on the last char
                 if (index == boringString.length())
                     return false;
 
                 // Only replace if the next char is a vowel
-                const char nextChar = MakeLower(boringString[index  + found.length()]);
+                const char nextChar = MakeLower(boringString[index + found.length()]);
 
                 // Is this a non-vowel?
                 if (!IsVowel(nextChar))
@@ -206,47 +219,12 @@ std::string MakeUwu(std::string boringString) {
             }
     );
 
-    // Replace R with nothing, but only if preceded by a vowel, and (not succeeded by a non-letter or eof)
-    /*
-    boringString = ReplaceButKeepCapitalization(
-            boringString,
-            "r",
-            "",
-            [boringString](const std::string& found, int index)
-            {
-                // Don't replace, if we are on the last char
-                if (index == boringString.length() - 1)
-                    return false;
-
-                if ((index == 0) ||(index == boringString.length() - 1))
-                    return false;
-
-                // Only replace if the last char is not a vowel
-                const char lastChar = MakeLower(boringString[index - 1]);
-                const char nextChar = MakeLower(boringString[index + found.length()]);
-
-                // Is the next char a letter?
-                if (!((lastChar >= 'a') && (nextChar <= 'z')))
-                    return false;
-
-                // Is this a vowel?
-                if (IsVowel(lastChar))
-                    return true;
-
-                // Else, don't replace
-                return false;
-            }
-    );
-     */
-
-
     // Replace L with W, but only if not followed or preceded by another L
-    boringString = ReplaceButKeepCapitalization(
+    boringString = ReplaceButKeepSigns(
             boringString,
             "l",
             "w",
-            [boringString](const std::string& found, int index)
-            {
+            [boringString](const std::string &found, int index) {
                 if (boringString.length() < found.length() + 2)
                     return false;
 
@@ -258,12 +236,11 @@ std::string MakeUwu(std::string boringString) {
     );
 
     // Replace LL with WW, but only if followed by a vowel
-    boringString = ReplaceButKeepCapitalization(
+    boringString = ReplaceButKeepSigns(
             boringString,
             "ll",
             "ww",
-            [boringString](const std::string& found, int index)
-            {
+            [boringString](const std::string &found, int index) {
                 if (boringString.length() < found.length())
                     return false;
 
@@ -274,24 +251,24 @@ std::string MakeUwu(std::string boringString) {
     );
 
     // Replace random punctuation with uwwwwu cute symbols
-    // About evewy tenth symbol
+    // About evewy fifteenth symbol
     std::stringstream ss;
     std::mt19937 rng(69);
     for (const char c : boringString)
     {
-        if ((c == '.') && (rng() % 18 == 0))
+        if ((c == '.') && (rng() % 15 == 0))
         {
             ss << " <3333 ^.^ ";
         }
-        else if ((c == '!') && (rng() % 18 == 0))
+        else if ((c == '!') && (rng() % 15 == 0))
         {
             ss << "!! Thadws impowtant! <3 ";
         }
-        else if ((c == ',') && (rng() % 18 == 0))
+        else if ((c == ',') && (rng() % 15 == 0))
         {
             ss << " <3 aaaaaand ";
         }
-        else if ((c == '?') && (rng() % 18 == 0))
+        else if ((c == '?') && (rng() % 15 == 0))
         {
             ss << "?? now tell me! >:( ";
         }
@@ -325,7 +302,8 @@ int main(int argc, char** argv) {
 
         std::cout << std::endl;
     }
-        // Else, be prepared to get __piped__
+
+    // Else, be prepared to get __piped__
     else
     {
         std::string buf;

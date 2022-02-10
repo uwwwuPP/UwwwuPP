@@ -224,7 +224,7 @@ std::string MakeUwu(std::string boringString) {
             "ny",
             [boringString](const std::string &found, int index) {
                 // Don't replace, if we are on the last char
-                if (index == boringString.length() - 1)
+                if (index + found.length() == boringString.length() - 1)
                     return false;
 
                 // Only replace if the next char is a vowel
@@ -246,7 +246,7 @@ std::string MakeUwu(std::string boringString) {
             "w",
             [boringString](const std::string &found, const std::size_t index) {
                 // Don't replace, if we are on the last char
-                if (index == boringString.length())
+                if (index + found.length() == boringString.length() - 1)
                     return false;
 
                 // Only replace if the next char is a vowel
@@ -289,6 +289,24 @@ std::string MakeUwu(std::string boringString) {
                 const char nextChar = MakeLower(boringString[index + found.length()]);
 
                 return IsVowel(nextChar);
+            }
+    );
+
+    // Replace ER with A, but only if it's the last two letters of a word
+    boringString = ReplaceButKeepSigns(
+            boringString,
+            "er",
+            "a",
+            [boringString](const std::string &found, int index) {
+                // Replace if we're at the end of this line/segment
+                if (index + found.length() == boringString.length() - 1)
+                    return false;
+
+                // Fetch the next char
+                const char nextChar = MakeLower(boringString[index + found.length()]);
+
+                // Replace if the next char is not a letter
+                return IsLetter(nextChar) == false;
             }
     );
 

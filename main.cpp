@@ -323,7 +323,6 @@ std::string MakeUwu(std::string boringString) {
     boringString = StringTools::Replace(boringString, ":)", "UwU :D");
     boringString = StringTools::Replace(boringString, ":D", ":3");
     boringString = StringTools::Replace(boringString, ":-)", "UwwwU :3");
-    boringString = StringTools::Replace(boringString, "wow", "XDD"); // "lol" -> "wow"
     boringString = StringTools::Replace(boringString, "^^", "^.^ UwU");
 
     // Some language replacement should happen after these more complex rules

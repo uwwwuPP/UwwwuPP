@@ -23,14 +23,26 @@ bool IsVowel(const char c, const std::string& vowels = "euioay") {
         );
 }
 
+//! Returns whether or not `c` is a letter
+bool IsLetter(const char c) {
+    const char lowercase_c = !(c & (1<<5)) ? (c | (1<<5)) : c; // Re-implementing IsUpper and MakeLower to prevent stack-overflow by endless recursion
+    return (lowercase_c >= 'a') && (lowercase_c <= 'z');
+}
+
+
 //! Checks whether or not `c` is an uppercase character
 bool IsUpper(const char c) {
-    return !(c & (1<<5));
+    if (!IsLetter(c))
+        return false;
+    else
+        return !(c & (1<<5));
 }
 
 //! Will return `c` as an uppercase character
 char MakeUpper(char c) {
-    if (IsUpper(c))
+    if (!IsLetter(c))
+        return c;
+    else if (IsUpper(c))
         return c;
     else
         return c & ~(1<<5);
@@ -38,7 +50,9 @@ char MakeUpper(char c) {
 
 //! Will return `c` as a lowercase character
 char MakeLower(char c) {
-    if (!IsUpper(c))
+    if (!IsLetter(c))
+        return c;
+    else if (!IsUpper(c))
         return c;
     else
         return c | (1<<5);
@@ -46,6 +60,8 @@ char MakeLower(char c) {
 
 //! Will return `c` with the same capitalization as `sign`.
 char CopySign(char sign, char c) {
+    if (!IsLetter(c))
+        return c;
     if (IsUpper(sign))
         return MakeUpper(c);
     else
@@ -105,7 +121,7 @@ std::string ReplaceButKeepSigns(
                     }
                 }
 
-                    // in this case we sync by index, BUT...
+                // in this case we sync by index, BUT...
                 else if (foundInText.length() < sub.length())
                 {
                     char followingCharsSign = 0;
@@ -126,19 +142,23 @@ std::string ReplaceButKeepSigns(
                     }
 
 
+                    char lastCharCharSign = 0;
+
+                    for (std::size_t j = 0; j < sub.length(); j++)
                     {
-                        char lastCharCharSign = 0;
+                        const char cs = sub[j];
 
-                        for (std::size_t j = 0; j < sub.length(); j++)
+                        // Do we still have chars of 'find' left?
+                        if (j < foundInText.length())
                         {
-                            const char cs = sub[j];
-
-                            // Do we still have chars of 'find' left?
-                            if (j < foundInText.length()) {
-                                const char cf = foundInText[j];
-                                lastCharCharSign = cf & (1 << 5);
-                            }
-
+                            // Yes: Just copy the sign as is, and update the last sign seen
+                            const char cf = foundInText[j];
+                            lastCharCharSign = cf & (1 << 5);
+                            ss << CopySign(cf, cs);
+                        }
+                        else
+                        {
+                            // No: Use the last sign seen, or the sign of the following char (the following char within the same word-boundry) (Important for replacing vocals within a word)
                             const char charSignToUse = doHaveFollowingChar ? followingCharsSign : lastCharCharSign;
                             ss << CopySign(charSignToUse, cs);
                         }
@@ -164,6 +184,7 @@ std::string ReplaceButKeepSigns(
     return ss.str();
 }
 
+//! Will make a boring string look sooper dooper kawaii and cute :3
 std::string MakeUwu(std::string boringString) {
     // Easy ones first
     // none, lol
@@ -175,7 +196,18 @@ std::string MakeUwu(std::string boringString) {
     boringString = ReplaceButKeepSigns(boringString, "tr", "tw");
     boringString = ReplaceButKeepSigns(boringString, "up", "uwp");
 
-    // Replace N with Ny, but only if succeeded by a
+    // Let's do some language adjustments
+    boringString = ReplaceButKeepSigns(boringString, "twank you", "you're twe best <3333 xoxo");
+    boringString = ReplaceButKeepSigns(boringString, "good", "sooper dooper");
+    boringString = ReplaceButKeepSigns(boringString, "suwper", "sooper dooper");
+    boringString = ReplaceButKeepSigns(boringString, "well", "sooper dooper");
+    boringString = ReplaceButKeepSigns(boringString, "emacs", "vim");
+    boringString = ReplaceButKeepSigns(boringString, "twanks", "you're twe best :DD xoxo");
+    boringString = ReplaceButKeepSigns(boringString, "hello", "hiiiiiii");
+    boringString = ReplaceButKeepSigns(boringString, "dear", "hiiiiiii");
+    boringString = ReplaceButKeepSigns(boringString, "hi", "hiiiiiii");
+
+    // Replace N with Ny, but only if succeeded by a vowel
     boringString = ReplaceButKeepSigns(
             boringString,
             "n",
@@ -279,15 +311,14 @@ std::string MakeUwu(std::string boringString) {
 
     // Also replace some ascii-"emojis'
     boringString = StringTools::Replace(boringString, ":)", "UwU :D");
-    boringString = StringTools::Replace(boringString, ":-)", "UwwwU :D");
-    boringString = StringTools::Replace(boringString, "lol", "XDD");
+    boringString = StringTools::Replace(boringString, ":D", ":3");
+    boringString = StringTools::Replace(boringString, ":-)", "UwwwU :3");
+    boringString = StringTools::Replace(boringString, "wow", "XDD"); // "lol" -> "wow"
     boringString = StringTools::Replace(boringString, "^^", "^.^ UwU");
-    boringString = StringTools::Replace(boringString, "thank you", "youwe twe best <3333 xoxo");
-    boringString = StringTools::Replace(boringString, "thanks", "youwe twe best :D xoxo");
-    boringString = StringTools::Replace(boringString, "thank's", "youwe twe best <3 uwu");
-    boringString = StringTools::Replace(boringString, "hello", "Hiiiiiii");
-    boringString = StringTools::Replace(boringString, "c++", "c++ (rust is hella cutewr btw ^^)");
-    boringString = StringTools::Replace(boringString, "C++", "C++ (rust is hella cutewr btw ^^)");
+
+    // Some language replacement should happen after these more complex rules
+    boringString = ReplaceButKeepSigns(boringString, "c++", "c++ (rust is hella cutewr btw ^^)");
+
 
     return boringString;
 }
@@ -297,10 +328,12 @@ int main(int argc, char** argv) {
     // We have arguments. Uwwuifie these instead
     if (argc > 1)
     {
+        // We have to put the args together first, because some replace-rules cross word-borders
+        std::stringstream  ss;
         for (std::size_t i = 1; i < argc; i++)
-            std::cout << MakeUwu(argv[i]) + " ";
+            ss << std::string(argv[i]) + " ";
 
-        std::cout << std::endl;
+        std::cout << MakeUwu(ss.str()) << std::endl;
     }
 
     // Else, be prepared to get __piped__

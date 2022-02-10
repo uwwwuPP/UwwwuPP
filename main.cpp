@@ -29,7 +29,6 @@ bool IsLetter(const char c) {
     return (lowercase_c >= 'a') && (lowercase_c <= 'z');
 }
 
-
 //! Checks whether or not `c` is an uppercase character
 bool IsUpper(const char c) {
     if (!IsLetter(c))
@@ -339,9 +338,13 @@ int main(int argc, char** argv) {
     // Else, be prepared to get __piped__
     else
     {
+        // We're better off processing all in one go, as to not re-seed the PRNG for every single line...
         std::string buf;
+        std::stringstream  ss;
         while (std::getline(std::cin, buf))
-            std::cout << MakeUwu(buf) << std::endl;
+            ss << buf << std::endl;
+
+        std::cout << MakeUwu(ss.str()) << std::endl;
     }
 
     return 0;

@@ -295,7 +295,7 @@ std::string MakeUwu(std::string boringString) {
     // Replace random punctuation with uwwwwu cute symbols
     // About evewy fifteenth symbol
     std::stringstream ss;
-    std::mt19937 rng(69);
+    std::mt19937 rng(std::hash<std::string>()(boringString)); // Seed rng based on string
     for (const char c : boringString)
     {
         if ((c == '.') && (rng() % 15 == 0))
@@ -349,26 +349,10 @@ int main(int argc, char** argv) {
     // Else, be prepared to get __piped__
     else
     {
-        // We're better off processing all in one go, as to not having to re-seed the PRNG for every single line...
-        // To still support BIG files / endless streams, we'll flush our buffer after every 10th line
         std::string buf;
-        std::stringstream ss;
-        std::size_t lineCounter = 0;
         while (std::getline(std::cin, buf))
-        {
-            ss << buf << std::endl;
-            lineCounter++;
+            std::cout << MakeUwu(buf) << std::endl;
 
-            if (lineCounter >= 10)
-            {
-                lineCounter = 0;
-                std::cout << MakeUwu(ss.str()) << std::endl;
-                ss.str("");
-            }
-        }
-
-        // Flush one last time
-        std::cout << MakeUwu(ss.str()) << std::endl;
     }
 
     return 0;

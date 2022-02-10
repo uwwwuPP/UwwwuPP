@@ -212,7 +212,7 @@ std::string MakeUwu(std::string boringString) {
     boringString = ReplaceButKeepSigns(boringString, "suwper", "sooper dooper");
     boringString = ReplaceButKeepSigns(boringString, "well", "sooper dooper");
     boringString = ReplaceButKeepSigns(boringString, "emacs", "vim");
-    boringString = ReplaceButKeepSigns(boringString, "twanks", "you're twe best :DD xoxo");
+    boringString = ReplaceButKeepSigns(boringString, "twanks", "you're twe best :33 xoxo");
     boringString = ReplaceButKeepSigns(boringString, "hello", "hiiiiiii");
     boringString = ReplaceButKeepSigns(boringString, "dear", "hiiiiiii");
     boringString = ReplaceButKeepSigns(boringString, "hi", "hiiiiiii");

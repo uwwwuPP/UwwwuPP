@@ -168,7 +168,7 @@ std::string ReplaceButKeepSigns(
                         }
                         else
                         {
-                            // No: Use the last sign seen, or the sign of the following char (the following char within the same word-boundry) (Important for replacing vocals within a word)
+                            // No: Use the last sign seen, or the sign of the following char (the following char within the same word-boundary) (Important for replacing vocals within a word)
                             const char charSignToUse = doHaveFollowingChar ? followingCharsSign : lastCharCharSign;
                             ss << CopySign(charSignToUse, cs);
                         }

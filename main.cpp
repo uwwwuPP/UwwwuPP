@@ -6,11 +6,11 @@
 #include <algorithm>
 #include <random>
 
-//! Generic uppercase character
-constexpr char UPPERCASE = (1<<5);
+//! Generic uppercase character.
+constexpr char UPPERCASE = 0;
 
-//! Generic lowercase character
-constexpr char LOWERCASE = 0;
+//! Generic lowercase character.
+constexpr char LOWERCASE = (1<<5);
 
 //! Checks whether or not `c` is a vowel. You can define custom vowel characters.
 bool IsVowel(const char c, const std::string& vowels = "euioay") {
@@ -23,23 +23,28 @@ bool IsVowel(const char c, const std::string& vowels = "euioay") {
         );
 }
 
-//! Returns whether or not `c` is a letter
+//! Returns whether or not `c` is a letter.
 bool IsLetter(const char c) {
     const char lowercase_c = !(c & (1<<5)) ? (c | (1<<5)) : c; // Re-implementing IsUpper and MakeLower to prevent stack-overflow by endless recursion
     return (lowercase_c >= 'a') && (lowercase_c <= 'z');
 }
 
-//! Checks whether or not `c` is an uppercase character
+//! Returns whether or not `c` is a generic character (that contains JUST the sign)
+bool IsGeneric(const char c) {
+    return (c == UPPERCASE) || (c == LOWERCASE);
+}
+
+//! Checks whether or not `c` is an uppercase character.
 bool IsUpper(const char c) {
-    if (!IsLetter(c))
+    if ((!IsLetter(c)) && (!IsGeneric(c)))
         return false;
     else
         return !(c & (1<<5));
 }
 
-//! Will return `c` as an uppercase character
+//! Will return `c` as an uppercase character.
 char MakeUpper(char c) {
-    if (!IsLetter(c))
+    if ((!IsLetter(c)) && (!IsGeneric(c)))
         return c;
     else if (IsUpper(c))
         return c;
@@ -47,9 +52,9 @@ char MakeUpper(char c) {
         return c & ~(1<<5);
 }
 
-//! Will return `c` as a lowercase character
+//! Will return `c` as a lowercase character.
 char MakeLower(char c) {
-    if (!IsLetter(c))
+    if ((!IsLetter(c)) && (!IsGeneric(c)))
         return c;
     else if (!IsUpper(c))
         return c;
@@ -57,9 +62,17 @@ char MakeLower(char c) {
         return c | (1<<5);
 }
 
+//! Will return an empty character with the same sign/capitalization as `c`.
+char GetSign(char c) {
+    if (IsUpper(c))
+        return UPPERCASE;
+    else
+        return LOWERCASE;
+}
+
 //! Will return `c` with the same capitalization as `sign`.
 char CopySign(char sign, char c) {
-    if (!IsLetter(c))
+    if ((!IsLetter(c)) && (!IsGeneric(c)))
         return c;
     if (IsUpper(sign))
         return MakeUpper(c);
@@ -131,18 +144,16 @@ std::string ReplaceButKeepSigns(
                         const char followingChar = str[i + foundInText.length()];
 
                         // Is it a letter?
-                        if ((followingChar >= 'a' && followingChar <= 'z') ||
-                            (followingChar >= 'A' && followingChar <= 'Z'))
+                        if (IsLetter(followingChar))
                         {
                             // Copy its sign
-                            followingCharsSign = followingChar & (1 << 5);
+                            followingCharsSign = GetSign(followingChar);
                             doHaveFollowingChar = true;
                         }
                     }
 
 
                     char lastCharCharSign = 0;
-
                     for (std::size_t j = 0; j < sub.length(); j++)
                     {
                         const char cs = sub[j];
@@ -152,7 +163,7 @@ std::string ReplaceButKeepSigns(
                         {
                             // Yes: Just copy the sign as is, and update the last sign seen
                             const char cf = foundInText[j];
-                            lastCharCharSign = cf & (1 << 5);
+                            lastCharCharSign = GetSign(cf);
                             ss << CopySign(cf, cs);
                         }
                         else
@@ -338,12 +349,25 @@ int main(int argc, char** argv) {
     // Else, be prepared to get __piped__
     else
     {
-        // We're better off processing all in one go, as to not re-seed the PRNG for every single line...
+        // We're better off processing all in one go, as to not having to re-seed the PRNG for every single line...
+        // To still support BIG files / endless streams, we'll flush our buffer after every 10th line
         std::string buf;
-        std::stringstream  ss;
+        std::stringstream ss;
+        std::size_t lineCounter = 0;
         while (std::getline(std::cin, buf))
+        {
             ss << buf << std::endl;
+            lineCounter++;
 
+            if (lineCounter >= 10)
+            {
+                lineCounter = 0;
+                std::cout << MakeUwu(ss.str()) << std::endl;
+                ss.str("");
+            }
+        }
+
+        // Flush one last time
         std::cout << MakeUwu(ss.str()) << std::endl;
     }
 

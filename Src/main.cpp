@@ -58,7 +58,7 @@ std::string MakeUwu(std::string boringString) {
                         nextNextChar = CharTools::MakeLower(boringString[index + found.length() + 1]);
                         nextNextCharIsNotLetter = !CharTools::IsLetter(nextNextChar);
                     }
-                    
+
                     const bool nextNextCharBreaksWord = (sizeLeft == 1) || (nextNextCharIsNotLetter);
 
                     // Don't replace if:
@@ -155,7 +155,7 @@ std::string MakeUwu(std::string boringString) {
             [boringString](const std::string &found, int index) {
                 // Replace if we're at the end of this line/segment
                 if (index + found.length() == boringString.length())
-                    return false;
+                    return true;
 
                 // Fetch the next char
                 const char nextChar = CharTools::MakeLower(boringString[index + found.length()]);

@@ -177,8 +177,8 @@ std::string ReplaceButKeepSigns(
             }
             else
             {
-                // We do not have an occurrence... just insert the char as is
-                ss << str[i];
+                // We do not have an occurrence... just insert the subsection found as is (next iteration will start behind it)
+                ss << foundInText;
             }
 
             // Advance i accordingly
@@ -304,7 +304,8 @@ std::string MakeUwu(std::string boringString) {
             "ll",
             "ww",
             [boringString](const std::string &found, int index) {
-                if (boringString.length() < found.length())
+                // Don't replace, if we are on the last char
+                if (index + found.length() == boringString.length() - 1)
                     return false;
 
                 const char nextChar = MakeLower(boringString[index + found.length()]);

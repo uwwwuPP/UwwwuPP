@@ -1,84 +1,11 @@
 #include <iostream>
 #include <StringTools.h>
+#include <CharTools.h>
 #include <string>
 #include <sstream>
 #include <functional>
 #include <algorithm>
 #include <random>
-
-//! Generic uppercase character.
-constexpr char UPPERCASE = 0;
-
-//! Generic lowercase character.
-constexpr char LOWERCASE = (1<<5);
-
-//! Checks whether or not `c` is a vowel. You can define custom vowel characters.
-bool IsVowel(const char c, const std::string& vowels = "euioay") {
-    return std::any_of(
-            vowels.cbegin(),
-            vowels.cend(),
-            [c](const char vowel) {
-                    return c == vowel;
-                }
-        );
-}
-
-//! Returns whether or not `c` is a letter.
-bool IsLetter(const char c) {
-    const char lowercase_c = !(c & (1<<5)) ? (c | (1<<5)) : c; // Re-implementing IsUpper and MakeLower to prevent stack-overflow by endless recursion
-    return (lowercase_c >= 'a') && (lowercase_c <= 'z');
-}
-
-//! Returns whether or not `c` is a generic character (that contains JUST the sign)
-bool IsGeneric(const char c) {
-    return (c == UPPERCASE) || (c == LOWERCASE);
-}
-
-//! Checks whether or not `c` is an uppercase character.
-bool IsUpper(const char c) {
-    if ((!IsLetter(c)) && (!IsGeneric(c)))
-        return false;
-    else
-        return !(c & (1<<5));
-}
-
-//! Will return `c` as an uppercase character.
-char MakeUpper(char c) {
-    if ((!IsLetter(c)) && (!IsGeneric(c)))
-        return c;
-    else if (IsUpper(c))
-        return c;
-    else
-        return c & ~(1<<5);
-}
-
-//! Will return `c` as a lowercase character.
-char MakeLower(char c) {
-    if ((!IsLetter(c)) && (!IsGeneric(c)))
-        return c;
-    else if (!IsUpper(c))
-        return c;
-    else
-        return c | (1<<5);
-}
-
-//! Will return an empty character with the same sign/capitalization as `c`.
-char GetSign(char c) {
-    if (IsUpper(c))
-        return UPPERCASE;
-    else
-        return LOWERCASE;
-}
-
-//! Will return `c` with the same capitalization as `sign`.
-char CopySign(char sign, char c) {
-    if ((!IsLetter(c)) && (!IsGeneric(c)))
-        return c;
-    if (IsUpper(sign))
-        return MakeUpper(c);
-    else
-        return MakeLower(c);
-}
 
 //! Will replace all occurrences of a substring `find` in `str` with `sub`, but it will try to keep the characters signs.
 //! Like (pay attention to the capitalization):.
@@ -129,7 +56,7 @@ std::string ReplaceButKeepSigns(
                         const char cf = foundInText[j];
                         const char cs = sub[j];
 
-                        ss << CopySign(cf, cs);
+                        ss << CharTools::CopySign(cf, cs);
                     }
                 }
 
@@ -144,10 +71,10 @@ std::string ReplaceButKeepSigns(
                         const char followingChar = str[i + foundInText.length()];
 
                         // Is it a letter?
-                        if (IsLetter(followingChar))
+                        if (CharTools::IsLetter(followingChar))
                         {
                             // Copy its sign
-                            followingCharsSign = GetSign(followingChar);
+                            followingCharsSign = followingChar;
                             doHaveFollowingChar = true;
                         }
                     }
@@ -163,14 +90,14 @@ std::string ReplaceButKeepSigns(
                         {
                             // Yes: Just copy the sign as is, and update the last sign seen
                             const char cf = foundInText[j];
-                            lastCharCharSign = GetSign(cf);
-                            ss << CopySign(cf, cs);
+                            lastCharCharSign = cf;
+                            ss << CharTools::CopySign(cf, cs);
                         }
                         else
                         {
                             // No: Use the last sign seen, or the sign of the following char (the following char within the same word-boundary) (Important for replacing vocals within a word)
                             const char charSignToUse = doHaveFollowingChar ? followingCharsSign : lastCharCharSign;
-                            ss << CopySign(charSignToUse, cs);
+                            ss << CharTools::CopySign(charSignToUse, cs);
                         }
                     }
                 }
@@ -227,15 +154,15 @@ std::string MakeUwu(std::string boringString) {
                 if (index + found.length() == boringString.length() - 1)
                     return false;
 
-                const char nextChar = MakeLower(boringString[index + found.length()]);
-                const char lastChar = MakeLower(boringString[index - 1]);
+                const char nextChar = CharTools::MakeLower(boringString[index + found.length()]);
+                const char lastChar = CharTools::MakeLower(boringString[index - 1]);
 
                 // Don't replace if the last char is an 'o'
                 if (lastChar == 'o')
                     return false;
 
                 // Is this a vowel?
-                if (IsVowel(nextChar))
+                if (CharTools::IsVowel(nextChar))
                     return true;
 
                 // Else, don't replace
@@ -257,15 +184,15 @@ std::string MakeUwu(std::string boringString) {
                 if (index == 0)
                     return false;
 
-                const char nextChar = MakeLower(boringString[index + found.length()]);
-                const char lastChar = MakeLower(boringString[index - 1]);
+                const char nextChar = CharTools::MakeLower(boringString[index + found.length()]);
+                const char lastChar = CharTools::MakeLower(boringString[index - 1]);
 
                 // Is this a non-vowel?
-                if (!IsVowel(nextChar))
+                if (!CharTools::IsVowel(nextChar))
                     return false;
 
                 // Don't replace if the last char is not a letter
-                if (!IsLetter(lastChar))
+                if (!CharTools::IsLetter(lastChar))
                     return false;
 
                 // Else, replace
@@ -287,11 +214,11 @@ std::string MakeUwu(std::string boringString) {
                 if (index == 0)
                     return false;
 
-                const char lastChar = MakeLower(boringString[index - 1]);
-                const char nextChar = MakeLower(boringString[index + found.length()]);
+                const char lastChar = CharTools::MakeLower(boringString[index - 1]);
+                const char nextChar = CharTools::MakeLower(boringString[index + found.length()]);
 
                 // Don't replace if the last char is not a letter
-                if (!IsLetter(lastChar))
+                if (!CharTools::IsLetter(lastChar))
                     return false;
 
                 return (lastChar != 'l') && (nextChar != 'l');
@@ -308,9 +235,9 @@ std::string MakeUwu(std::string boringString) {
                 if (index + found.length() == boringString.length() - 1)
                     return false;
 
-                const char nextChar = MakeLower(boringString[index + found.length()]);
+                const char nextChar = CharTools::MakeLower(boringString[index + found.length()]);
 
-                return IsVowel(nextChar);
+                return CharTools::IsVowel(nextChar);
             }
     );
 
@@ -325,10 +252,10 @@ std::string MakeUwu(std::string boringString) {
                     return false;
 
                 // Fetch the next char
-                const char nextChar = MakeLower(boringString[index + found.length()]);
+                const char nextChar = CharTools::MakeLower(boringString[index + found.length()]);
 
                 // Replace if the next char is not a letter
-                return IsLetter(nextChar) == false;
+                return CharTools::IsLetter(nextChar) == false;
             }
     );
 

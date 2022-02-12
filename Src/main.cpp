@@ -30,22 +30,42 @@ std::string MakeUwu(std::string boringString) {
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "dear", "hiiiiiii");
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "hi", "hiiiiiii");
 
-    // Replace N with Ny, but only if succeeded by a vowel, and not preceded by an o: "one" has such a niche pronunciation.
+    // Replace N with Ny, but only if succeeded by a vowel, and not (preceded by an o and succeeded by an "e{nonletter}"): "one" has such a niche pronunciation...
     boringString = Util::ConditionalReplaceButKeepSigns(
             boringString,
             "n",
             "ny",
             [boringString](const std::string &found, int index) {
                 // Don't replace, if we are on the last char
-                if (index + found.length() == boringString.length() - 1)
+                if (index + found.length() == boringString.length())
                     return false;
 
                 const char nextChar = CharTools::MakeLower(boringString[index + found.length()]);
                 const char lastChar = CharTools::MakeLower(boringString[index - 1]);
 
-                // Don't replace if the last char is an 'o'
-                if (lastChar == 'o')
-                    return false;
+                // Apply the complex "one\b"-rule:
+                // (don't replace if 'n' is preceded by 'o' and succeeded by 'e', which is succeeded by a word break)
+                {
+                    bool nextNextCharIsNotLetter = false;
+                    char nextNextChar;
+
+                    // How much length is left including `nextChar`?
+                    const std::size_t sizeLeft = boringString.length() - (index + found.length());
+
+                    // We have room to pick the nextNext char...
+                    if (sizeLeft > 1)
+                    {
+                        nextNextChar = CharTools::MakeLower(boringString[index + found.length() + 1]);
+                        nextNextCharIsNotLetter = !CharTools::IsLetter(nextNextChar);
+                    }
+                    
+                    const bool nextNextCharBreaksWord = (sizeLeft == 1) || (nextNextCharIsNotLetter);
+
+                    // Don't replace if:
+                    // (lastChar == o) && (nextChar == e) && (nextNextCharBreaksWord)
+                    if ((lastChar == 'o') && (nextChar == 'e') && (nextNextCharBreaksWord))
+                        return false;
+                }
 
                 // Is this a vowel?
                 if (CharTools::IsVowel(nextChar))
@@ -63,7 +83,7 @@ std::string MakeUwu(std::string boringString) {
             "w",
             [boringString](const std::string &found, const std::size_t index) {
                 // Don't replace, if we are on the last char
-                if (index + found.length() == boringString.length() - 1)
+                if (index + found.length() == boringString.length())
                     return false;
 
                 // Don't replace if we're at index 0
@@ -118,7 +138,7 @@ std::string MakeUwu(std::string boringString) {
             "ww",
             [boringString](const std::string &found, int index) {
                 // Don't replace, if we are on the last char
-                if (index + found.length() == boringString.length() - 1)
+                if (index + found.length() == boringString.length())
                     return false;
 
                 const char nextChar = CharTools::MakeLower(boringString[index + found.length()]);
@@ -134,7 +154,7 @@ std::string MakeUwu(std::string boringString) {
             "a",
             [boringString](const std::string &found, int index) {
                 // Replace if we're at the end of this line/segment
-                if (index + found.length() == boringString.length() - 1)
+                if (index + found.length() == boringString.length())
                     return false;
 
                 // Fetch the next char

@@ -15,6 +15,7 @@ link_directories(Lib/StringTools/Src/cmake-build-release/)
 
 # Add absolutely kawaii sources to Uwwwu <3
 add_executable(Uwwwu
+        Util.cpp
         main.cpp
 )
 

@@ -4,122 +4,8 @@
 #include <string>
 #include <sstream>
 #include <functional>
-#include <algorithm>
 #include <random>
-
-//! Will replace all occurrences of a substring `find` in `str` with `sub`, but it will try to keep the characters signs.
-//! Like (pay attention to the capitalization):.
-//! ("Hello World", "hello", "hi") -> "Hi World".
-//! ("hello World", "hello", "hi") -> "hi World".
-//! ("HELLO World", "hello", "hi") -> "HI World".
-//! You can also supply a callback to only perform a replacement if certain conditions apply.
-std::string ReplaceButKeepSigns(
-        const std::string& str,
-        std::string find,
-        const std::string& sub,
-        const std::function<bool(const std::string&, const std::size_t)>& onlyIf = [](const std::string &,
-                                                                                      const std::size_t) { return true; } // Default is: replace always
-) {
-
-    // Quick accepts-and rejects
-    if (str.length() == 0)
-        return "";
-    else if (find.length() == 0)
-        return str;
-
-    std::stringstream ss;
-
-    // Better safe than sorry
-    find = StringTools::Lower(find);
-
-    for (std::size_t i = 0; i < str.length(); i++)
-    {
-        const std::string foundInText = str.substr(i, find.length());
-        const std::string foundInText_lower = StringTools::Lower(foundInText);
-        if (foundInText_lower == find)
-        {
-            // Ask the callback if we should replace this one
-            if (onlyIf(foundInText, i))
-            {
-                // Here we've found our occurrence...
-                // We have three possible cases:
-                // 1: len(find) == len(sub), in this case we want to sync capitalization by index.
-                // 2: len(find) < len(sub), in this case we sync by index, BUT...
-                // 3: len(find) > len(sub): sync capitalization by index
-
-                // We want to sync capitalization by index
-                // This accounts for both cases: 1 and 3
-                if (foundInText.length() >= sub.length())
-                {
-                    for (std::size_t j = 0; j < sub.length(); j++)
-                    {
-                        const char cf = foundInText[j];
-                        const char cs = sub[j];
-
-                        ss << CharTools::CopySign(cf, cs);
-                    }
-                }
-
-                // in this case we sync by index, BUT...
-                else if (foundInText.length() < sub.length())
-                {
-                    char followingCharsSign = 0;
-                    bool doHaveFollowingChar = false;
-                    // Do we even have a following char?
-                    if (str.length() >= i + foundInText.length() + 1)
-                    {
-                        const char followingChar = str[i + foundInText.length()];
-
-                        // Is it a letter?
-                        if (CharTools::IsLetter(followingChar))
-                        {
-                            // Copy its sign
-                            followingCharsSign = followingChar;
-                            doHaveFollowingChar = true;
-                        }
-                    }
-
-
-                    char lastCharCharSign = 0;
-                    for (std::size_t j = 0; j < sub.length(); j++)
-                    {
-                        const char cs = sub[j];
-
-                        // Do we still have chars of 'find' left?
-                        if (j < foundInText.length())
-                        {
-                            // Yes: Just copy the sign as is, and update the last sign seen
-                            const char cf = foundInText[j];
-                            lastCharCharSign = cf;
-                            ss << CharTools::CopySign(cf, cs);
-                        }
-                        else
-                        {
-                            // No: Use the last sign seen, or the sign of the following char (the following char within the same word-boundary) (Important for replacing vocals within a word)
-                            const char charSignToUse = doHaveFollowingChar ? followingCharsSign : lastCharCharSign;
-                            ss << CharTools::CopySign(charSignToUse, cs);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                // We do not have an occurrence... just insert the subsection found as is (next iteration will start behind it)
-                ss << foundInText;
-            }
-
-            // Advance i accordingly
-            i += foundInText.length()-1;
-        }
-        else
-        {
-            // We do not have an occurrence... just insert the char as is
-            ss << str[i];
-        }
-    }
-
-    return ss.str();
-}
+#include "Util.h"
 
 //! Will make a boring string look sooper dooper kawaii and cute :3
 std::string MakeUwu(std::string boringString) {
@@ -127,25 +13,25 @@ std::string MakeUwu(std::string boringString) {
     // none, lol
 
     // Slightly more complex... Multichar replacements, but we have to keep capitalization...
-    boringString = ReplaceButKeepSigns(boringString, "th", "tw");
-    boringString = ReplaceButKeepSigns(boringString, "ove", "uv");
-    boringString = ReplaceButKeepSigns(boringString, "have", "haf");
-    boringString = ReplaceButKeepSigns(boringString, "tr", "tw");
-    boringString = ReplaceButKeepSigns(boringString, "up", "uwp");
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "th", "tw");
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ove", "uv");
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "have", "haf");
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "tr", "tw");
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "up", "uwp");
 
     // Let's do some language adjustments
-    boringString = ReplaceButKeepSigns(boringString, "twank you", "you're twe best <3333 xoxo");
-    boringString = ReplaceButKeepSigns(boringString, "good", "sooper dooper");
-    boringString = ReplaceButKeepSigns(boringString, "suwper", "sooper dooper");
-    boringString = ReplaceButKeepSigns(boringString, "well", "sooper dooper");
-    boringString = ReplaceButKeepSigns(boringString, "emacs", "vim");
-    boringString = ReplaceButKeepSigns(boringString, "twanks", "you're twe best :33 xoxo");
-    boringString = ReplaceButKeepSigns(boringString, "hello", "hiiiiiii");
-    boringString = ReplaceButKeepSigns(boringString, "dear", "hiiiiiii");
-    boringString = ReplaceButKeepSigns(boringString, "hi", "hiiiiiii");
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "twank you", "you're twe best <3333 xoxo");
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "good", "sooper dooper");
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "suwper", "sooper dooper");
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "well", "sooper dooper");
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "emacs", "vim");
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "twanks", "you're twe best :33 xoxo");
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "hello", "hiiiiiii");
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "dear", "hiiiiiii");
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "hi", "hiiiiiii");
 
     // Replace N with Ny, but only if succeeded by a vowel, and not preceded by an o: "one" has such a niche pronunciation.
-    boringString = ReplaceButKeepSigns(
+    boringString = Util::ConditionalReplaceButKeepSigns(
             boringString,
             "n",
             "ny",
@@ -171,7 +57,7 @@ std::string MakeUwu(std::string boringString) {
     );
 
     // Replace R with W, but only if not succeeded by a non-vowel, and if it's not the first character of a word
-    boringString = ReplaceButKeepSigns(
+    boringString = Util::ConditionalReplaceButKeepSigns(
             boringString,
             "r",
             "w",
@@ -201,7 +87,7 @@ std::string MakeUwu(std::string boringString) {
     );
 
     // Replace L with W, but only if not followed or preceded by another L, and if it's not the first character of a word
-    boringString = ReplaceButKeepSigns(
+    boringString = Util::ConditionalReplaceButKeepSigns(
             boringString,
             "l",
             "w",
@@ -226,7 +112,7 @@ std::string MakeUwu(std::string boringString) {
     );
 
     // Replace LL with WW, but only if followed by a vowel
-    boringString = ReplaceButKeepSigns(
+    boringString = Util::ConditionalReplaceButKeepSigns(
             boringString,
             "ll",
             "ww",
@@ -242,7 +128,7 @@ std::string MakeUwu(std::string boringString) {
     );
 
     // Replace ER with A, but only if it's the last two letters of a word
-    boringString = ReplaceButKeepSigns(
+    boringString = Util::ConditionalReplaceButKeepSigns(
             boringString,
             "er",
             "a",
@@ -293,7 +179,7 @@ std::string MakeUwu(std::string boringString) {
     boringString = StringTools::Replace(boringString, "^^", "^.^ UwU");
 
     // Some language replacement should happen after these more complex rules
-    boringString = ReplaceButKeepSigns(boringString, "c++", "c++ (rust is hella cutewr btw ^^)");
+    boringString = Util::HeConditionalReplaceButKeepSigns(boringString, "c++", "c++ (rust is hella cutewr btw ^^)");
 
 
     return boringString;

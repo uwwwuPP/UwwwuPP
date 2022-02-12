@@ -36,6 +36,8 @@ std::string MakeUwu(std::string boringString) {
             "n",
             "ny",
             [boringString](const std::string &found, int index) {
+                // Jävla this is one clustered piece of shitcode
+
                 // Don't replace, if we are on the last char
                 if (index + found.length() == boringString.length())
                     return false;

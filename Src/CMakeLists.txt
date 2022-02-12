@@ -5,13 +5,13 @@ project(Uwwwu)
 set(CMAKE_CXX_STANDARD 17)
 
 # Add build dependency for StringTools
-add_subdirectory(Lib/StringTools/src/ Lib/StringTools/src/cmake-build-release/ EXCLUDE_FROM_ALL)
+add_subdirectory(Lib/StringTools/Src/ Lib/StringTools/Src/cmake-build-release/ EXCLUDE_FROM_ALL)
 
 # Add StringTools src dir to include dir list
-include_directories(Lib/StringTools/src/)
+include_directories(Lib/StringTools/Src/)
 
 # Add StringTools build dir to library repository list
-link_directories(Lib/StringTools/src/cmake-build-release/)
+link_directories(Lib/StringTools/Src/cmake-build-release/)
 
 # Add absolutely kawaii sources to Uwwwu <3
 add_executable(Uwwwu

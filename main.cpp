@@ -217,7 +217,7 @@ std::string MakeUwu(std::string boringString) {
     boringString = ReplaceButKeepSigns(boringString, "dear", "hiiiiiii");
     boringString = ReplaceButKeepSigns(boringString, "hi", "hiiiiiii");
 
-    // Replace N with Ny, but only if succeeded by a vowel
+    // Replace N with Ny, but only if succeeded by a vowel, and not preceded by an o: "one" has such a niche pronunciation.
     boringString = ReplaceButKeepSigns(
             boringString,
             "n",
@@ -227,8 +227,12 @@ std::string MakeUwu(std::string boringString) {
                 if (index + found.length() == boringString.length() - 1)
                     return false;
 
-                // Only replace if the next char is a vowel
                 const char nextChar = MakeLower(boringString[index + found.length()]);
+                const char lastChar = MakeLower(boringString[index - 1]);
+
+                // Don't replace if the last char is an 'o'
+                if (lastChar == 'o')
+                    return false;
 
                 // Is this a vowel?
                 if (IsVowel(nextChar))
@@ -253,7 +257,6 @@ std::string MakeUwu(std::string boringString) {
                 if (index == 0)
                     return false;
 
-                // Only replace if the next char is a vowel
                 const char nextChar = MakeLower(boringString[index + found.length()]);
                 const char lastChar = MakeLower(boringString[index - 1]);
 

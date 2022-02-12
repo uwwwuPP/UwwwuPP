@@ -1,5 +1,5 @@
 #include <iostream>
-#include <StringTools/StringTools.h>
+#include <StringTools.h>
 #include <string>
 #include <sstream>
 #include <functional>

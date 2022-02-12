@@ -5,7 +5,6 @@
 #include <functional>
 #include <cstddef>
 
-
 class Util {
 public:
     //! Will replace all occurrences of a substring `find` in `str` with `sub`, but it will try to keep the characters signs.

@@ -179,7 +179,7 @@ std::string MakeUwu(std::string boringString) {
     boringString = StringTools::Replace(boringString, "^^", "^.^ UwU");
 
     // Some language replacement should happen after these more complex rules
-    boringString = Util::HeConditionalReplaceButKeepSigns(boringString, "c++", "c++ (rust is hella cutewr btw ^^)");
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "c++", "c++ (rust is hella cutewr btw ^^)");
 
 
     return boringString;

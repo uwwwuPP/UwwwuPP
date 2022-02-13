@@ -7,7 +7,7 @@ std::string Util::ConditionalReplaceButKeepSigns(
         const std::string& str,
         std::string find,
         const std::string& sub,
-        const std::function<bool(const std::string&, const std::size_t)>& onlyIf
+        const std::function<bool(const std::string&, const std::string&, const std::size_t)>& onlyIf
 )
 {
 
@@ -29,7 +29,7 @@ std::string Util::ConditionalReplaceButKeepSigns(
         if (foundInText_lower == find)
         {
             // Ask the callback if we should replace this one
-            if (onlyIf(foundInText, i))
+            if (onlyIf(str, foundInText, i))
             {
                 // Here we've found our occurrence...
                 // We have three possible cases:

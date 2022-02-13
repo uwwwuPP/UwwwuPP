@@ -97,7 +97,7 @@ TEST_CASE(__FILE__"/RejectingAllReplacementsChangesNothing", "[]")
             in,
             "e",
             "hello",
-            [](auto, auto){ return false; } // Reject all replacements
+            [](auto, auto, auto){ return false; } // Reject all replacements
     );
 
     // Verify
@@ -116,7 +116,7 @@ TEST_CASE(__FILE__"/Callback_Index_Matches", "[]")
             in,
             "banana",
             "hello",
-            [](const std::string& finding, const std::size_t index) -> bool {
+            [](const std::string& original, const std::string& finding, const std::size_t index) -> bool {
                 REQUIRE(index == 7);
                 return true;
             }
@@ -135,7 +135,7 @@ TEST_CASE(__FILE__"/Callback_Finding_Matches", "[]")
             in,
             "banana",
             "hello",
-            [](const std::string& finding, const std::size_t index) -> bool {
+            [](const std::string& original, const std::string& finding, const std::size_t index) -> bool {
                 REQUIRE(finding == "BANAna");
                 return true;
             }
@@ -157,7 +157,7 @@ TEST_CASE(__FILE__"/Callback_Conditional_Rejecting_Works", "[]")
             in,
             "ding",
             "dong",
-            [ptrCounter](const std::string& finding, const std::size_t index) -> bool {
+            [ptrCounter](const std::string& original, const std::string& finding, const std::size_t index) -> bool {
                 return (++*ptrCounter) % 2;
             }
     );
@@ -182,4 +182,22 @@ TEST_CASE(__FILE__"/ReplaceSymbols", "[]")
 
     // Verify
     REQUIRE(result == expected);
+}
+
+// The callback ALWAYS receives the same, identical 'original string' value on each call, without any replacements made to it.
+TEST_CASE(__FILE__"/Original-value_on_callback_is_correct", "[]")
+{
+    // Setup
+    const std::string in = "I felt happy because I saw the others were happy and because I knew I should feel happy, but I wasn't really happy.”";
+
+    // Exercise & Verify
+    const std::string result = Util::ConditionalReplaceButKeepSigns(
+            in,
+            "happy",
+            "",
+            [in](const std::string& original, const std::string& finding, const std::size_t index) -> bool {
+                REQUIRE(original == in);
+                return true;
+            }
+    );
 }

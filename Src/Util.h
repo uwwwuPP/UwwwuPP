@@ -17,8 +17,8 @@ public:
             const std::string& str,
             std::string find,
             const std::string& sub,
-            const std::function<bool(const std::string&, const std::size_t)>& onlyIf =
-                    [](const std::string &, const std::size_t) { return true; } // Default is: replace always
+            const std::function<bool(const std::string&, const std::string&, const std::size_t)>& onlyIf =
+                    [](auto, auto, auto) { return true; } // Default is: replace always
     );
 };
 

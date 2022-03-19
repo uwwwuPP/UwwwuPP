@@ -20,6 +20,7 @@ add_executable(Test
 
         # Uwwwu-Tests
         ConditionalReplaceButKeepSigns.cpp
+        HappyPath.cpp
 )
 
 target_link_libraries(Test StringTools)

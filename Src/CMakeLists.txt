@@ -17,7 +17,7 @@ link_directories(Lib/StringTools/Src/cmake-build-release/)
 add_executable(Uwwwu
         Util.cpp
         main.cpp
-)
+        LibUwu.h)
 
 # Link StringTools library
 target_link_libraries(Uwwwu StringTools)

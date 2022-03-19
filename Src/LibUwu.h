@@ -137,6 +137,36 @@ static inline std::string MakeUwu(std::string boringString) {
             }
     );
 
+    // Replace C with W, but only if succeeded and preceeded by a vowel
+    boringString = Util::ConditionalReplaceButKeepSigns(
+            boringString,
+            "c",
+            "w",
+            [](const std::string& original, const std::string& finding, const std::size_t index) {
+                // Don't replace, if we are on the last char
+                if (index + finding.length() == original.length())
+                    return false;
+
+                // Don't replace if we're at index 0
+                if (index == 0)
+                    return false;
+
+                const char nextChar = CharTools::MakeLower(original[index + finding.length()]);
+                const char lastChar = CharTools::MakeLower(original[index - 1]);
+
+                // Don't replace, if the next char is not a vowel
+                if (!CharTools::IsVowel(nextChar))
+                    return false;
+
+                // Don't replace if the last char is not a vowel
+                if (!CharTools::IsVowel(lastChar))
+                    return false;
+
+                // Else, replace
+                return true;
+            }
+    );
+
     // Replace L with W, but only if not followed or preceded by another L, and if it's not the first character of a word
     boringString = Util::ConditionalReplaceButKeepSigns(
             boringString,
@@ -196,7 +226,7 @@ static inline std::string MakeUwu(std::string boringString) {
             }
     );
 
-    // Replace random punctuation with uwwwwu cute symbols
+    // Replace random punctuation with uwwwwu cute symbols <3
     // About evewy fifteenth symbol
     std::stringstream ss;
     std::mt19937 rng(std::hash<std::string>()(boringString)); // Seed rng based on string

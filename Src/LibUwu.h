@@ -196,6 +196,46 @@ static inline std::string MakeUwu(std::string boringString) {
             }
     );
 
+    // Replace R with W, but only (if it's preceeded by a vowel,
+    // or preceeded by another 'r',
+    // or if it's the first character of a word)
+    // and if it's not the last character of a word
+    boringString = Util::ConditionalReplaceButKeepSigns(
+            boringString,
+            "r",
+            "w",
+            [](const std::string& original, const std::string& finding, const std::size_t index) {
+                // Don't replace if it's the last character
+                if (index + finding.length() == original.length())
+                    return false;
+
+                // Do blindly replace if it's the first character
+                if (index == 0)
+                    return true;
+
+                // Fetch the last character
+                const char lastChar = CharTools::MakeLower(original[index - 1]);
+
+                // Fetch the next char
+                const char nextChar = CharTools::MakeLower(original[index + finding.length()]);
+
+                // Don't replace, if the last char is not a letter
+                if (!CharTools::IsLetter(lastChar))
+                  return false;
+
+                // Don't replace, if the next char is not a letter
+                if (!CharTools::IsLetter(nextChar))
+                  return false;
+
+                // Replace, if the last character is an 'r' aswell
+                if (lastChar == 'r')
+                  return true;
+
+                // Replace, if the last character is a vowel.
+                return CharTools::IsVowel(lastChar);
+            }
+    );
+
     // Replace random punctuation with uwwwwu cute symbols
     // About evewy fifteenth symbol
     std::stringstream ss;

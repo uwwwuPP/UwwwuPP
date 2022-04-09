@@ -236,12 +236,62 @@ static inline std::string MakeUwu(std::string boringString) {
             }
     );
 
+    // Replace y with y-y (imitates shy stuttering), but only sometimes (random change),
+    // and if it is the first character of a word,
+    // and if it is followed by a vowel
+    boringString = Util::ConditionalReplaceButKeepSigns(
+            boringString,
+            "y",
+            "y-y",
+            [boringString](const std::string& original, const std::string& finding, const std::size_t index) {
+                // Don't replace, if we're at the end of our string
+                if (index + finding.length() == original.length())
+                    return false;
+
+                // This is a bit tricky, because we can't abort if we're on the first char
+                // but we can can't not check the previous char either. Running big risk
+                // of causing a segfault. So we have to not check the previous character,
+                // if we are on the first char.
+
+                // Are we on the first char?
+                const bool isFirstChar = index == 0;
+
+                // Fetch the last character
+                const char lastChar = isFirstChar ? '\0' : CharTools::MakeLower(original[index - 1]);
+
+                // Fetch the next character
+                const char nextChar = CharTools::MakeLower(original[index + finding.length()]);
+
+                // Don't replace, if the last char is a letter
+                if ((!isFirstChar) && (CharTools::IsLetter(lastChar)))
+                    return false;
+
+                // Don't replace, if the next char is not a vowel
+                if (!CharTools::IsVowel(nextChar))
+                    return false;
+
+                // Initialize deterministic prng
+                // Can't initialize one for all scopes, they don't seem to play
+                // nicely with being passed to lambda functions...
+                static std::mt19937 rng(std::hash<std::string>()(boringString)); // Seed rng based on string
+
+                // Chance (out of a 100) for the mutation to take place
+                // if all preconditions are met
+                constexpr int chance = 25;
+
+                // Roll the dice, baby!
+                return (rng() % 100) < chance;
+            }
+    );
+
     // Replace random punctuation with uwwwwu cute symbols
     // About evewy fifteenth symbol
     std::stringstream ss;
-    std::mt19937 rng(std::hash<std::string>()(boringString)); // Seed rng based on string
     for (const char c : boringString)
     {
+        // Initialize deterministic prng
+        std::mt19937 rng(std::hash<std::string>()(boringString)); // Seed rng based on string
+
         if ((c == '.') && (rng() % 15 == 0))
         {
             ss << " <3333 ^.^ ";

@@ -20,7 +20,6 @@ int main(int argc, char** argv) {
         std::string buf;
         while (std::getline(std::cin, buf))
             std::cout << MakeUwu(buf) << std::endl;
-
     }
 
     return 0;

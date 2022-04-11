@@ -307,7 +307,7 @@ static inline std::string MakeUwu(std::string boringString) {
 
                 // Chance (out of a 100) for the mutation to take place
                 // if all preconditions are met
-                constexpr int chance = 25;
+                constexpr int chance = 40;
 
                 // Roll the dice, baby!
                 return (rng() % 100) < chance;

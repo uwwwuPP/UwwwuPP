@@ -32,18 +32,16 @@ static inline auto ValidatorFindingIsCompleteWord(const std::string& original, c
         return false;
 }
 
-// This validator will only replace findings 75% of the time
-static inline auto Validator75Percent(const std::string& original, const std::string& finding, const std::size_t index) -> bool {
-    // Seed rng based on string position
-    std::mt19937 rng(index); 
-
-    // Replace at 75% chance
-    return (rng() % 4) < 3;
+// This validator will only replace findings 50% of the time
+static inline auto Validator50Percent(const std::string& original, const std::string& finding, const std::size_t index) -> bool {
+    // Replace at 50% chance
+    std::random_device rd;
+    return rd() % 2;
 }
 
 // This validator will only replace findings, if they are a complete word, and not just part of a word, at 75%
-static inline auto ValidatorFindingIsCompleteWordAt75Percent(const std::string& original, const std::string& finding, const std::size_t index) -> bool {
-    return Validator75Percent(original, finding, index) && ValidatorFindingIsCompleteWord(original, finding, index);
+static inline auto ValidatorFindingIsCompleteWordAt50Percent(const std::string& original, const std::string& finding, const std::size_t index) -> bool {
+    return Validator50Percent(original, finding, index) && ValidatorFindingIsCompleteWord(original, finding, index);
 }
 
 // Validator for stuttering (y -> y-y)
@@ -123,8 +121,8 @@ static inline std::string MakeUwu(std::string boringString) {
 
     // Let's extend some phonetics
     // These are quite agressive, so don't do them _every time_
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ay", "aaay", Validator75Percent);
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ey", "eeey", Validator75Percent);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ay", "aaay", Validator50Percent);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ey", "eeey", Validator50Percent);
 
     /*
     // Replace N with Ny, but only if succeeded by a vowel, and not (preceded by an o and succeeded by an "e{nonletter}"): "one" has such a niche pronunciation...
@@ -384,23 +382,23 @@ static inline std::string MakeUwu(std::string boringString) {
 
     // Also replace some ascii-"emojis'
     boringString = StringTools::Replace(boringString, "^^", "^.^");
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":)", ":3", ValidatorFindingIsCompleteWordAt75Percent);
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":)", "x3", ValidatorFindingIsCompleteWordAt75Percent);
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":)", ">.<", ValidatorFindingIsCompleteWordAt75Percent);
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":)", ">///<", ValidatorFindingIsCompleteWordAt75Percent);
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":)", "^.^", ValidatorFindingIsCompleteWordAt75Percent);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":)", ":3", ValidatorFindingIsCompleteWordAt50Percent);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":)", "x3", ValidatorFindingIsCompleteWordAt50Percent);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":)", ">.<", ValidatorFindingIsCompleteWordAt50Percent);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":)", ">///<", ValidatorFindingIsCompleteWordAt50Percent);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":)", "^.^", ValidatorFindingIsCompleteWordAt50Percent);
 
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":-)", ":3", ValidatorFindingIsCompleteWordAt75Percent);
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":-)", "x3", ValidatorFindingIsCompleteWordAt75Percent);
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":-)", ">.<", ValidatorFindingIsCompleteWordAt75Percent);
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":-)", ">///<", ValidatorFindingIsCompleteWordAt75Percent);
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":-)", "^.^", ValidatorFindingIsCompleteWordAt75Percent);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":-)", ":3", ValidatorFindingIsCompleteWordAt50Percent);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":-)", "x3", ValidatorFindingIsCompleteWordAt50Percent);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":-)", ">.<", ValidatorFindingIsCompleteWordAt50Percent);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":-)", ">///<", ValidatorFindingIsCompleteWordAt50Percent);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":-)", "^.^", ValidatorFindingIsCompleteWordAt50Percent);
 
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":D", ":3", ValidatorFindingIsCompleteWordAt75Percent);
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":D", "x3", ValidatorFindingIsCompleteWordAt75Percent);
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":D", ">.<", ValidatorFindingIsCompleteWordAt75Percent);
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":D", ">///<", ValidatorFindingIsCompleteWordAt75Percent);
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":D", "^.^", ValidatorFindingIsCompleteWordAt75Percent);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":D", ":3", ValidatorFindingIsCompleteWordAt50Percent);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":D", "x3", ValidatorFindingIsCompleteWordAt50Percent);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":D", ">.<", ValidatorFindingIsCompleteWordAt50Percent);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":D", ">///<", ValidatorFindingIsCompleteWordAt50Percent);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":D", "^.^", ValidatorFindingIsCompleteWordAt50Percent);
 
     // Some language replacement should happen after these more complex rules
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "c++", "c++ (rust is hella cutewr btw ^^)");

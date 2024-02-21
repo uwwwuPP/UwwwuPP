@@ -12,14 +12,14 @@ int main(int argc, char** argv)
             ss << std::string(argv[i]) + " ";
         }
 
-        std::cout << MakeUwu(ss.str()) << std::endl;
+        std::cout << (ss.str()) << std::endl;
     }
     // Else, be prepared to get __piped__
     else
     {
         std::string buf;
         while (std::getline(std::cin, buf)) {
-            std::cout << buf << std::endl;
+            std::cout << (buf) << std::endl;
         }
     }
 

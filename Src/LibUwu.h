@@ -115,6 +115,7 @@ static inline std::string MakeUwu(std::string boringString) {
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "dear", "hiiiiiii", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "hi", "hiiiiiii", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "come", "cum", ValidatorFindingIsCompleteWord);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "coming", "cumming", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "cat", "catto", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "dog", "doggo", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "cool", "keewl", ValidatorFindingIsCompleteWord);

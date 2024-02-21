@@ -355,10 +355,13 @@ static inline std::string MakeUwu(std::string boringString) {
 
         if ((c == '.') && (rng() % 15 == 0))
         {
-            if (rng() % 2)
+            std::size_t n = rng() % 3;
+            if (n == 0)
                 ss << " <3333 ^.^ ";
-            else
+            else if (n == 1)
                 ss << " :3 uwu ";
+            else
+                ss << "~";
         }
         else if ((c == '!') && (rng() % 15 == 0))
         {

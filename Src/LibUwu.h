@@ -290,24 +290,6 @@ static inline std::string MakeUwu(std::string boringString) {
             }
     );
 
-    // Replace hi with hiiiiiii, but only if it's the last two letters of a word
-    boringString = Util::ConditionalReplaceButKeepSigns(
-            boringString,
-            "hi",
-            "hiiiiiii",
-            [](const std::string& original, const std::string& finding, const std::size_t index) {
-                // Replace if we're at the end of this line/segment
-                if (index + finding.length() == original.length())
-                    return true;
-
-                // Fetch the next char
-                const char nextChar = CharTools::MakeLower(original[index + finding.length()]);
-
-                // Replace if the next char is not a letter
-                return !CharTools::IsLetter(nextChar);
-            }
-    );
-
     // Replace R with W, but only (if it's preceeded by a vowel,
     // or preceeded by another 'r',
     // or if it's the first character of a word)

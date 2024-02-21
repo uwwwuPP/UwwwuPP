@@ -18,8 +18,10 @@ int main(int argc, char** argv) {
     else
     {
         std::string buf;
-        while (std::getline(std::cin, buf))
+        while (std::getline(std::cin, buf)) {
             std::cout << MakeUwu(buf) << std::endl;
+            std::cout.flush();
+        }
     }
 
     return 0;

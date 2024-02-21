@@ -5,7 +5,6 @@
 #include <CharTools.h>
 #include <string>
 #include <sstream>
-#include <iostream>
 #include <functional>
 #include <random>
 #include "Util.h"
@@ -104,7 +103,6 @@ static inline std::string MakeUwu(std::string boringString) {
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "have", "haf");
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "tr", "tw");
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "up", "uwp");
-    std::cout << "a" << std::endl;
 
     // Let's do some language adjustments
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "twank you", "you're twe best <3333 xoxo", ValidatorFindingIsCompleteWord);
@@ -121,13 +119,11 @@ static inline std::string MakeUwu(std::string boringString) {
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "cat", "catto", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "dog", "doggo", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "cool", "keewl", ValidatorFindingIsCompleteWord);
-    std::cout << "b" << std::endl;
 
     // Let's extend some phonetics
     // These are quite agressive, so don't do them _every time_
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ay", "aaay", Validator75Percent);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ey", "eeey", Validator75Percent);
-    std::cout << "c" << std::endl;
 
     /*
     // Replace N with Ny, but only if succeeded by a vowel, and not (preceded by an o and succeeded by an "e{nonletter}"): "one" has such a niche pronunciation...
@@ -348,7 +344,6 @@ static inline std::string MakeUwu(std::string boringString) {
         boringString = Util::ConditionalReplaceButKeepSigns(boringString, find, replace, ValidatorStutter);
         ss.str("");
     }
-    std::cout << "d" << std::endl;
 
     // Replace random punctuation with uwwwwu cute symbols
     // About evewy fifteenth symbol
@@ -383,7 +378,6 @@ static inline std::string MakeUwu(std::string boringString) {
             ss << c;
     }
     boringString = ss.str();
-    std::cout << "e" << std::endl;
 
     // Also replace some ascii-"emojis'
     boringString = StringTools::Replace(boringString, "^^", "^.^");
@@ -407,7 +401,6 @@ static inline std::string MakeUwu(std::string boringString) {
 
     // Some language replacement should happen after these more complex rules
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "c++", "c++ (rust is hella cutewr btw ^^)");
-    std::cout << "f" << std::endl;
 
 
     return boringString;

@@ -33,7 +33,7 @@ static inline auto ValidatorFindingIsCompleteWord(const std::string& original, c
 }
 
 // This validator will only replace findings 75% of the time
-static inline auto Validator45Percent(const std::string& original, const std::string& finding, const std::size_t index) -> bool {
+static inline auto Validator75Percent(const std::string& original, const std::string& finding, const std::size_t index) -> bool {
     // Seed rng based on string
     std::mt19937 rng(std::hash<std::string>()(original)); 
 
@@ -43,7 +43,7 @@ static inline auto Validator45Percent(const std::string& original, const std::st
 
 // This validator will only replace findings, if they are a complete word, and not just part of a word, at 75%
 static inline auto ValidatorFindingIsCompleteWordAt75Percent(const std::string& original, const std::string& finding, const std::size_t index) -> bool {
-    return Validator45Percent(original, finding, index) && ValidatorFindingIsCompleteWord(original, finding, index);
+    return Validator75Percent(original, finding, index) && ValidatorFindingIsCompleteWord(original, finding, index);
 }
 
 // Validator for stuttering (y -> y-y)
@@ -121,8 +121,8 @@ static inline std::string MakeUwu(std::string boringString) {
 
     // Let's extend some phonetics
     // These are quite agressive, so don't do them _every time_
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ay", "aaay", Validator45Percent);
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ey", "eeey", Validator45Percent);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ay", "aaay", Validator75Percent);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ey", "eeey", Validator75Percent);
 
     // Replace N with Ny, but only if succeeded by a vowel, and not (preceded by an o and succeeded by an "e{nonletter}"): "one" has such a niche pronunciation...
     boringString = Util::ConditionalReplaceButKeepSigns(

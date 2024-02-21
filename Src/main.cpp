@@ -19,9 +19,7 @@ int main(int argc, char** argv)
     {
         std::string buf;
         while (std::getline(std::cin, buf)) {
-            std::cout << "begin" << std::endl;
             std::cout << MakeUwu(buf) << std::endl;
-            std::cout << "end" << std::endl;
         }
     }
 

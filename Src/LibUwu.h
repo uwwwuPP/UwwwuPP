@@ -124,6 +124,7 @@ static inline std::string MakeUwu(std::string boringString) {
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ay", "aaay", Validator75Percent);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ey", "eeey", Validator75Percent);
 
+    /*
     // Replace N with Ny, but only if succeeded by a vowel, and not (preceded by an o and succeeded by an "e{nonletter}"): "one" has such a niche pronunciation...
     boringString = Util::ConditionalReplaceButKeepSigns(
             boringString,
@@ -170,6 +171,7 @@ static inline std::string MakeUwu(std::string boringString) {
                 return false;
             }
     );
+    */
 
     // Replace R with W, but only if not succeeded by a non-vowel, and if it's not the first character of a word
     boringString = Util::ConditionalReplaceButKeepSigns(

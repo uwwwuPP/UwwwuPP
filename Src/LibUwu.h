@@ -34,8 +34,8 @@ static inline auto ValidatorFindingIsCompleteWord(const std::string& original, c
 
 // This validator will only replace findings 75% of the time
 static inline auto Validator75Percent(const std::string& original, const std::string& finding, const std::size_t index) -> bool {
-    // Seed rng based on string
-    std::mt19937 rng(std::hash<std::string>()(original)); 
+    // Seed rng based on string position
+    std::mt19937 rng(index); 
 
     // Replace at 75% chance
     return (rng() % 4) < 3;
@@ -82,7 +82,7 @@ static inline auto ValidatorStutter(const std::string& original, const std::stri
     // Initialize deterministic prng
     // Can't initialize one for all scopes, they don't seem to play
     // nicely with being passed to lambda functions...
-    static std::mt19937 rng(std::hash<std::string>()(original)); // Seed rng based on string
+    static std::mt19937 rng(index); // Seed rng based on string position
 
     // Chance (out of a 100) for the mutation to take place
     // if all preconditions are met
@@ -348,11 +348,10 @@ static inline std::string MakeUwu(std::string boringString) {
 
     // Replace random punctuation with uwwwwu cute symbols
     // About evewy fifteenth symbol
+    // Initialize deterministic prng
+    std::mt19937 rng(std::hash<std::string>()(boringString)); // Seed rng based on string
     for (const char c : boringString)
     {
-        // Initialize deterministic prng
-        std::mt19937 rng(std::hash<std::string>()(boringString)); // Seed rng based on string
-
         if ((c == '.') && (rng() % 15 == 0))
         {
             std::size_t n = rng() % 3;
@@ -405,7 +404,6 @@ static inline std::string MakeUwu(std::string boringString) {
 
     // Some language replacement should happen after these more complex rules
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "c++", "c++ (rust is hella cutewr btw ^^)");
-
 
     return boringString;
 }

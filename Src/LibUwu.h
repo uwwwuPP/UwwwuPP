@@ -424,9 +424,10 @@ static inline std::string MakeUwu(std::string boringString) {
     // About evewy fifteenth symbol
     // Initialize deterministic prng
     std::mt19937 rng(std::hash<std::string>()(boringString)); // Seed rng based on string
+    constexpr int CHANCE = 7;
     for (const char c : boringString)
     {
-        if ((c == '.') && (rng() % 15 == 0))
+        if ((c == '.') && (rng() % CHANCE == 0))
         {
             std::size_t n = rng() % 3;
             if (n == 0)
@@ -436,18 +437,18 @@ static inline std::string MakeUwu(std::string boringString) {
             else
                 ss << "~";
         }
-        else if ((c == '!') && (rng() % 15 == 0))
+        else if ((c == '!') && (rng() % CHANCE == 0))
         {
             ss << "!! thadws impowtant! " << getRandomBoykisserChatter(rng()) << ' ';
         }
-        else if ((c == ',') && (rng() % 15 == 0))
+        else if ((c == ',') && (rng() % CHANCE == 0))
         {
             if (rng() % 2)
                 ss << ' ' << getRandomBoykisserChatter(rng()) << " aaaaaand ";
             else
                 ss << ' ' << getRandomBoykisserChatter(rng()) << " sooooooo ";
         }
-        else if ((c == '?') && (rng() % 15 == 0))
+        else if ((c == '?') && (rng() % CHANCE == 0))
         {
             ss << "?? nyow tell me! " << getRandomBoykisserChatter(rng()) << ' ';
         }
@@ -481,7 +482,7 @@ static inline std::string MakeUwu(std::string boringString) {
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "c++", "c++ (rust is hella cutewr btw ^^)");
 
     // Always append an extra boykisser chatter. Can't have enough of those.
-    return boringString + getRandomBoykisserChatter();
+    return boringString + " " + getRandomBoykisserChatter();
 }
 
 #endif //UWWWU_LIBUWU_H

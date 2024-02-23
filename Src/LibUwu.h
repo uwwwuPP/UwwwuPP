@@ -106,6 +106,19 @@ static inline auto ValidatorFindingIsCompleteWord(const std::string& original, c
         return false;
 }
 
+// This validator will only replace findings, if they are at the end of a word
+static inline auto ValidatorFindingIsEndOfWord(const std::string& original, const std::string& finding, const std::size_t index) -> bool {
+    // Replace if we're at the end of this line/segment
+    if (index + finding.length() == original.length())
+        return true;
+
+    // Fetch the next char
+    const char nextChar = CharTools::MakeLower(original[index + finding.length()]);
+
+    // Replace if the next char is not a letter
+    return !CharTools::IsLetter(nextChar);
+}
+
 // This validator will only replace findings 50% of the time
 static inline auto Validator50Percent(const std::string& original, const std::string& finding, const std::size_t index) -> bool {
     // Replace at 50% chance
@@ -175,7 +188,9 @@ static inline std::string MakeUwu(std::string boringString) {
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "have", "haf");
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "tr", "tw");
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "up", "uwp");
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ude", "ood");
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ude", "ood", ValidatorFindingIsEndOfWord);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ers", "as", ValidatorFindingIsEndOfWord);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "er", "a", ValidatorFindingIsEndOfWord);
 
     // Let's do some language adjustments
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "twank you", "ur twe best <3333 xoxo", ValidatorFindingIsCompleteWord);
@@ -208,55 +223,6 @@ static inline std::string MakeUwu(std::string boringString) {
     // These are quite agressive, so don't do them _every time_
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ay", "aaay", Validator50Percent);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ey", "eeey", Validator50Percent);
-
-    /*
-    // Replace N with Ny, but only if succeeded by a vowel, and not (preceded by an o and succeeded by an "e{nonletter}"): "one" has such a niche pronunciation...
-    boringString = Util::ConditionalReplaceButKeepSigns(
-            boringString,
-            "n",
-            "ny",
-            [](const std::string& original, const std::string& finding, const std::size_t index) {
-                // Don't replace, if we are on the last char
-                if (index + finding.length() == original.length())
-                    return false;
-
-                const char nextChar = CharTools::MakeLower(original[index + finding.length()]);
-                const bool haveLastchar = index > 0; // Do we even have a last char?
-                const char lastChar = haveLastchar ? CharTools::MakeLower(original[index - 1]) : '\0';
-
-                // Apply the complex "one\b"-rule:
-                // (don't replace if 'n' is preceded by 'o' and succeeded by 'e', which is succeeded by a word break)
-                {
-                    bool nextNextCharIsNotLetter = false;
-                    char nextNextChar;
-
-                    // How much length is left including `nextChar`?
-                    const std::size_t sizeLeft = original.length() - (index + finding.length());
-
-                    // We have room to pick the nextNext char...
-                    if (sizeLeft > 1)
-                    {
-                        nextNextChar = CharTools::MakeLower(original[index + finding.length() + 1]);
-                        nextNextCharIsNotLetter = !CharTools::IsLetter(nextNextChar);
-                    }
-
-                    const bool nextNextCharBreaksWord = (sizeLeft == 1) || (nextNextCharIsNotLetter);
-
-                    // Don't replace if:
-                    // (lastChar == o) && (nextChar == e) && (nextNextCharBreaksWord)
-                    if ((haveLastchar) && (lastChar == 'o') && (nextChar == 'e') && (nextNextCharBreaksWord))
-                        return false;
-                }
-
-                // Is this a vowel?
-                if (CharTools::IsVowel(nextChar))
-                    return true;
-
-                // Else, don't replace
-                return false;
-            }
-    );
-    */
 
     // Replace R with W, but only if not succeeded by a non-vowel, and if it's not the first character of a word
     boringString = Util::ConditionalReplaceButKeepSigns(
@@ -356,64 +322,6 @@ static inline std::string MakeUwu(std::string boringString) {
                 const char nextChar = CharTools::MakeLower(original[index + finding.length()]);
 
                 return CharTools::IsVowel(nextChar);
-            }
-    );
-
-    // Replace ER with A, but only if it's the last two letters of a word
-    boringString = Util::ConditionalReplaceButKeepSigns(
-            boringString,
-            "er",
-            "a",
-            [](const std::string& original, const std::string& finding, const std::size_t index) {
-                // Replace if we're at the end of this line/segment
-                if (index + finding.length() == original.length())
-                    return true;
-
-                // Fetch the next char
-                const char nextChar = CharTools::MakeLower(original[index + finding.length()]);
-
-                // Replace if the next char is not a letter
-                return !CharTools::IsLetter(nextChar);
-            }
-    );
-
-    // Replace R with W, but only (if it's preceeded by a vowel,
-    // or preceeded by another 'r',
-    // or if it's the first character of a word)
-    // and if it's not the last character of a word
-    boringString = Util::ConditionalReplaceButKeepSigns(
-            boringString,
-            "r",
-            "w",
-            [](const std::string& original, const std::string& finding, const std::size_t index) {
-                // Don't replace if it's the last character
-                if (index + finding.length() == original.length())
-                    return false;
-
-                // Do blindly replace if it's the first character
-                if (index == 0)
-                    return true;
-
-                // Fetch the last character
-                const char lastChar = CharTools::MakeLower(original[index - 1]);
-
-                // Fetch the next char
-                const char nextChar = CharTools::MakeLower(original[index + finding.length()]);
-
-                // Don't replace, if the last char is not a letter
-                if (!CharTools::IsLetter(lastChar))
-                  return false;
-
-                // Don't replace, if the next char is not a letter
-                if (!CharTools::IsLetter(nextChar))
-                  return false;
-
-                // Replace, if the last character is an 'r' aswell
-                if (lastChar == 'r')
-                  return true;
-
-                // Replace, if the last character is a vowel.
-                return CharTools::IsVowel(lastChar);
             }
     );
 

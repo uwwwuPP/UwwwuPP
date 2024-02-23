@@ -325,6 +325,36 @@ static inline std::string MakeUwu(std::string boringString) {
             }
     );
 
+    // ", and" with ", aaaaaaaand"
+    boringString = Util::ConditionalReplaceButKeepSigns(
+        boringString,
+        ", and",
+        " aaaaaaand",
+        ValidatorFindingIsEndOfWord
+    );
+
+    // ", so" with " sooooooo"
+    boringString = Util::ConditionalReplaceButKeepSigns(
+        boringString,
+        ", so",
+        " soooooooo",
+        ValidatorFindingIsEndOfWord
+    );
+
+    // Replace "," with " uhhh", if the comma is not with an "and" or "so"
+    boringString = Util::ConditionalReplaceButKeepSigns(
+        boringString,
+        ",",
+        " uhhh",
+        [](const std::string& original, const std::string& finding, const std::size_t index) {
+            // Don't replace if we're at the end of the string
+            if (index == original.length() - 1)
+                return false;
+
+            return true;
+        }
+    );
+
     // Replace for example y with y-y (imitates shy stuttering)
     std::stringstream ss;
     for (char c = 'a'; c <= 'z'; c++) {
@@ -357,13 +387,6 @@ static inline std::string MakeUwu(std::string boringString) {
         else if ((c == '!') && (rng() % CHANCE == 0))
         {
             ss << "!! thadws impowtant! " << getRandomBoykisserChatter(rng());
-        }
-        else if ((c == ',') && (rng() % CHANCE == 0))
-        {
-            if (rng() % 2)
-                ss << ' ' << getRandomBoykisserChatter(rng()) << " aaaaaand";
-            else
-                ss << ' ' << getRandomBoykisserChatter(rng()) << " sooooooo";
         }
         else if ((c == '?') && (rng() % CHANCE == 0))
         {

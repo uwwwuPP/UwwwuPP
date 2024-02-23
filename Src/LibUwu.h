@@ -9,7 +9,7 @@
 #include <random>
 #include "Util.h"
 
-// I stole these from the fastest uwuifier in the west :3
+// I stole these from the fastest uwuifier in the west :3 (also added my own)
 std::string boykisserChatter[] = {
     "(ꈍᴗꈍ)",
     "OwO",
@@ -121,12 +121,11 @@ static inline auto ValidatorFindingIsEndOfWord(const std::string& original, cons
 
 // This validator will only replace findings 50% of the time
 static inline auto Validator50Percent(const std::string& original, const std::string& finding, const std::size_t index) -> bool {
-    // Replace at 50% chance
     std::random_device rd;
     return rd() % 2;
 }
 
-// This validator will only replace findings, if they are a complete word, and not just part of a word, at 75%
+// This validator will only replace findings, if they are a complete word, and not just part of a word, at 50%
 static inline auto ValidatorFindingIsCompleteWordAt50Percent(const std::string& original, const std::string& finding, const std::size_t index) -> bool {
     return Validator50Percent(original, finding, index) && ValidatorFindingIsCompleteWord(original, finding, index);
 }
@@ -134,7 +133,6 @@ static inline auto ValidatorFindingIsCompleteWordAt50Percent(const std::string& 
 // Validator for stuttering (y -> y-y)
 // but only sometimes (random change),
 // and if it is the first character of a word,
-// DISABLED: and if it is followed by a vowel
 static inline auto ValidatorStutter(const std::string& original, const std::string& finding, const std::size_t index) -> bool {
     // Don't replace, if we're at the end of our string
     if (index + finding.length() == original.length())
@@ -157,12 +155,6 @@ static inline auto ValidatorStutter(const std::string& original, const std::stri
     // Don't replace, if the last char is a letter
     if ((!isFirstChar) && (CharTools::IsLetter(lastChar)))
         return false;
-
-    // Don't replace, if the next char is not a vowel
-    /*
-    if (!CharTools::IsVowel(nextChar))
-        return false;
-    */
 
     // Initialize deterministic prng
     // Can't initialize one for all scopes, they don't seem to play
@@ -328,7 +320,7 @@ static inline std::string MakeUwu(std::string boringString) {
             }
     );
 
-    // ", and" with ", aaaaaaaand"
+    // ", and" with " aaaaaaaand"
     boringString = Util::ConditionalReplaceButKeepSigns(
         boringString,
         ", and",
@@ -344,7 +336,7 @@ static inline std::string MakeUwu(std::string boringString) {
         ValidatorFindingIsEndOfWord
     );
 
-    // Replace "," with " uhhh", if the comma is not with an "and" or "so"
+    // Replace "," with " uhhh"
     boringString = Util::ConditionalReplaceButKeepSigns(
         boringString,
         ",",
@@ -371,7 +363,6 @@ static inline std::string MakeUwu(std::string boringString) {
     }
 
     // Replace random punctuation with uwwwwu cute symbols
-    // About evewy fifteenth symbol
     // Initialize deterministic prng
     std::mt19937 rng(std::hash<std::string>()(boringString)); // Seed rng based on string
     constexpr int CHANCE = 2;

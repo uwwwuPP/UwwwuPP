@@ -348,7 +348,7 @@ static inline std::string MakeUwu(std::string boringString) {
         {
             std::size_t n = rng() % 3;
             if (n == 0)
-                ss << ' ' << getRandomBoykisserChatter(rng()) << ' ' << getRandomBoykisserChatter(rng()) << ' ';
+                ss << ' ' << getRandomBoykisserChatter(rng()) << ' ' << getRandomBoykisserChatter(rng());
             else if (n == 1)
                 ss << ' ' << getRandomBoykisserChatter(rng()) << " uwu ";
             else
@@ -356,7 +356,7 @@ static inline std::string MakeUwu(std::string boringString) {
         }
         else if ((c == '!') && (rng() % CHANCE == 0))
         {
-            ss << "!! thadws impowtant! " << getRandomBoykisserChatter(rng()) << ' ';
+            ss << "!! thadws impowtant! " << getRandomBoykisserChatter(rng());
         }
         else if ((c == ',') && (rng() % CHANCE == 0))
         {

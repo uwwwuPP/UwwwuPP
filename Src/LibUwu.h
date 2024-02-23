@@ -29,12 +29,6 @@ std::string boykisserChatter[] = {
     ">w<'",
     ">///<'",
     ">_<'",
-    "(⑅˘꒳˘)",
-    "(˘ω˘)",
-    "(U ᵕ U❁)",
-    "σωσ",
-    "òωó",
-    "(U ﹏ U)",
     ":3", // Important enough to have four of
     ":3",
     ":3",
@@ -71,6 +65,13 @@ std::string boykisserChatter[] = {
     "/(^•ω•^)",
     "(✿oωo)",
     "(~˘▾˘)~",
+    "(づ￣ ³￣)づ",
+    "(⑅˘꒳˘)",
+    "(˘ω˘)",
+    "(U ᵕ U❁)",
+    "σωσ",
+    "òωó",
+    "(U ﹏ U)",
 };
 
 const std::string& getRandomBoykisserChatter(int rand = -1) {

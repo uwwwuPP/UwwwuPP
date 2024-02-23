@@ -284,11 +284,11 @@ static inline std::string MakeUwu(std::string boringString) {
             }
     );
 
-    // Replace L with W, but only if followed or preceded by a vowel, and if it's not the first character of a word
+    // Replace L with LW, but only if followed or preceded by a vowel, and if it's not the first character of a word
     boringString = Util::ConditionalReplaceButKeepSigns(
             boringString,
             "l",
-            "w",
+            "wl",
             [](const std::string& original, const std::string& finding, const std::size_t index) {
                 // Our segment has to be at least two characters long
                 if (original.length() < finding.length() + 2)

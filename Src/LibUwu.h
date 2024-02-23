@@ -175,14 +175,15 @@ static inline std::string MakeUwu(std::string boringString) {
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "have", "haf");
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "tr", "tw");
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "up", "uwp");
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ude", "ood");
 
     // Let's do some language adjustments
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "twank you", "you're twe best <3333 xoxo", ValidatorFindingIsCompleteWord);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "twank you", "ur twe best <3333 xoxo", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "good", "sooper dooper", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "suwper", "sooper dooper", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "well", "sooper dooper", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "emacs", "vim", ValidatorFindingIsCompleteWord);
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "twanks", "you're twe best :33 xoxo", ValidatorFindingIsCompleteWord);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "twanks", "ur twe best :33 xoxo", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "hello", "hiiiiiii", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "dear", "hiiiiiii", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "hi", "hiiiiiii", ValidatorFindingIsCompleteWord);
@@ -194,6 +195,14 @@ static inline std::string MakeUwu(std::string boringString) {
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "cute", "kawaii", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "like", "luv", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "likes", "luvs", ValidatorFindingIsCompleteWord);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "your", "ur", ValidatorFindingIsCompleteWord);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "you", "u", ValidatorFindingIsCompleteWord);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "you're", "ur", ValidatorFindingIsCompleteWord);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "youre", "ur", ValidatorFindingIsCompleteWord);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "small", "smol", ValidatorFindingIsCompleteWord);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "sexy", "lewd", ValidatorFindingIsCompleteWord);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "dirty", "lewd", ValidatorFindingIsCompleteWord);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "inappropriate", "lewd", ValidatorFindingIsCompleteWord);
 
     // Let's extend some phonetics
     // These are quite agressive, so don't do them _every time_
@@ -309,7 +318,7 @@ static inline std::string MakeUwu(std::string boringString) {
             }
     );
 
-    // Replace L with W, but only if not followed or preceded by another L, and if it's not the first character of a word
+    // Replace L with W, but only if followed or preceded by a vowel, and if it's not the first character of a word
     boringString = Util::ConditionalReplaceButKeepSigns(
             boringString,
             "l",
@@ -330,7 +339,7 @@ static inline std::string MakeUwu(std::string boringString) {
                 if (!CharTools::IsLetter(lastChar))
                     return false;
 
-                return (lastChar != 'l') && (nextChar != 'l');
+                return CharTools::IsVowel(lastChar) && CharTools::IsVowel(nextChar);
             }
     );
 

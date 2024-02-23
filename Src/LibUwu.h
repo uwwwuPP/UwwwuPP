@@ -9,6 +9,79 @@
 #include <random>
 #include "Util.h"
 
+// I stole these from the fastest uwuifier in the west :3
+std::string boykisserChatter[] = {
+    "(ꈍᴗꈍ)",
+    "OwO",
+    "UwU",
+    "owo",
+    "uwu",
+    "eugh",
+    "o.O",
+    "o.o",
+    "O.o",
+    "Oo",
+    "oO",
+    ">w<",
+    ">///<",
+    ">_<",
+    ">w<'",
+    ">///<'",
+    ">_<'",
+    "(⑅˘꒳˘)",
+    "(˘ω˘)",
+    "(U ᵕ U❁)",
+    "σωσ",
+    "òωó",
+    "(U ﹏ U)",
+    ":3", // Important enough to have four of
+    ":3",
+    ":3",
+    ":3",
+    ";3",
+    ";3",
+    "x3",
+    "xd",
+    "xD",
+    "XD",
+    "x3c",
+    ":p",
+    ";p",
+    "<3",
+    "<33",
+    "<3333",
+    "^^",
+    "^.^",
+    "^_^",
+    "^-^",
+    "^.^'",
+    "^_^'",
+    "^-^'",
+    "nyaa~",
+    "mya",
+    "rawr",
+    ";w;",
+    "*_*",
+    "*.*",
+    "-.-",
+    "-.-'",
+    "(ˆ ﻌ ˆ)♡",
+    "^•ﻌ•^",
+    "/(^•ω•^)",
+    "(✿oωo)",
+    "(~˘▾˘)~",
+};
+
+const std::string& getRandomBoykisserChatter(int rand = -1) {
+    // Set rand, if unset
+    if (rand == -1) {
+        std::random_device rd;
+        rand = rd();
+    }
+
+    return boykisserChatter[rand % (sizeof(boykisserChatter) / sizeof(boykisserChatter[0]))];
+}
+
 // This validator will only replace findings, if they are a complete word, and not just part of a word.
 static inline auto ValidatorFindingIsCompleteWord(const std::string& original, const std::string& finding, const std::size_t index) -> bool {
     // Quick-accept: Original-string length matches finding-string length
@@ -354,26 +427,26 @@ static inline std::string MakeUwu(std::string boringString) {
         {
             std::size_t n = rng() % 3;
             if (n == 0)
-                ss << " <3333 ^.^ ";
+                ss << ' ' << getRandomBoykisserChatter(rng()) << ' ' << getRandomBoykisserChatter(rng()) << ' ';
             else if (n == 1)
-                ss << " :3 uwu ";
+                ss << ' ' << getRandomBoykisserChatter(rng()) << " uwu ";
             else
                 ss << "~";
         }
         else if ((c == '!') && (rng() % 15 == 0))
         {
-            ss << "!! thadws impowtant! <3 ";
+            ss << "!! thadws impowtant! " << getRandomBoykisserChatter(rng()) << ' ';
         }
         else if ((c == ',') && (rng() % 15 == 0))
         {
             if (rng() % 2)
-                ss << " <3 aaaaaand ";
+                ss << ' ' << getRandomBoykisserChatter(rng()) << " aaaaaand ";
             else
-                ss << " :3 sooooooo ";
+                ss << ' ' << getRandomBoykisserChatter(rng()) << " sooooooo ";
         }
         else if ((c == '?') && (rng() % 15 == 0))
         {
-            ss << "?? nyow tell me! >.< ";
+            ss << "?? nyow tell me! " << getRandomBoykisserChatter(rng()) << ' ';
         }
         else
             ss << c;
@@ -381,7 +454,8 @@ static inline std::string MakeUwu(std::string boringString) {
     boringString = ss.str();
 
     // Also replace some ascii-"emojis'
-    boringString = StringTools::Replace(boringString, "^^", "^.^");
+    // TODO: Find them individually, and choose a random boykisser chatter invidually
+    boringString = StringTools::Replace(boringString, "^^", "^_^");
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":)", ":3", ValidatorFindingIsCompleteWordAt50Percent);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":)", "x3", ValidatorFindingIsCompleteWordAt50Percent);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":)", ">.<", ValidatorFindingIsCompleteWordAt50Percent);
@@ -403,7 +477,8 @@ static inline std::string MakeUwu(std::string boringString) {
     // Some language replacement should happen after these more complex rules
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "c++", "c++ (rust is hella cutewr btw ^^)");
 
-    return boringString;
+    // Always append an extra boykisser chatter. Can't have enough of those.
+    return boringString + getRandomBoykisserChatter();
 }
 
 #endif //UWWWU_LIBUWU_H

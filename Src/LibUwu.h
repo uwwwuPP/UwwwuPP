@@ -374,7 +374,7 @@ static inline std::string MakeUwu(std::string boringString) {
     // About evewy fifteenth symbol
     // Initialize deterministic prng
     std::mt19937 rng(std::hash<std::string>()(boringString)); // Seed rng based on string
-    constexpr int CHANCE = 7;
+    constexpr int CHANCE = 2;
     for (const char c : boringString)
     {
         if ((c == '.') && (rng() % CHANCE == 0))
@@ -387,11 +387,11 @@ static inline std::string MakeUwu(std::string boringString) {
             else
                 ss << "~";
         }
-        else if ((c == '!') && (rng() % CHANCE == 0))
+        else if ((c == '!') && (rng() % (CHANCE*2) == 0))
         {
             ss << "!! thadws impowtant! " << getRandomBoykisserChatter(rng());
         }
-        else if ((c == '?') && (rng() % CHANCE == 0))
+        else if ((c == '?') && (rng() % (CHANCE*2) == 0))
         {
             ss << "?? nyow tell me! " << getRandomBoykisserChatter(rng());
         }

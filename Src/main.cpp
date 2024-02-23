@@ -9,7 +9,11 @@ int main(int argc, char** argv)
         // We have to put the args together first, because some replace-rules cross word-borders
         std::stringstream ss;
         for (std::size_t i = 1; i < argc; i++) {
-            ss << std::string(argv[i]) + " ";
+            ss << std::string(argv[i]);
+
+            if (i < argc-1) {
+                ss << ' ';
+            }
         }
 
         std::cout << MakeUwu(ss.str()) << std::endl;

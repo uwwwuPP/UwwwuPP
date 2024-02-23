@@ -218,6 +218,8 @@ static inline std::string MakeUwu(std::string boringString) {
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "sexy", "lewd", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "dirty", "lewd", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "inappropriate", "lewd", ValidatorFindingIsCompleteWord);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "nice", "awwsum", ValidatorFindingIsCompleteWord);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "nicely", "awwsumly", ValidatorFindingIsCompleteWord);
 
     // Let's extend some phonetics
     // These are quite agressive, so don't do them _every time_

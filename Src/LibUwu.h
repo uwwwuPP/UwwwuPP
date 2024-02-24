@@ -186,12 +186,12 @@ static inline std::string MakeUwu(std::string boringString) {
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "er", "a", ValidatorFindingIsEndOfWord);
 
     // Let's do some language adjustments
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "twank you", "ur twe best <3333 xoxo", ValidatorFindingIsCompleteWord);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "thank you", "ur twe best <3333 xoxo", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "good", "sooper dooper", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "suwper", "sooper dooper", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "well", "sooper dooper", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "emacs", "vim", ValidatorFindingIsCompleteWord);
-    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "twanks", "ur twe best :33 xoxo", ValidatorFindingIsCompleteWord);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "thanks", "ur twe best :33 xoxo", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "hello", "hiiiiiii", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "dear", "hiiiiiii", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "hi", "hiiiiiii", ValidatorFindingIsCompleteWord);

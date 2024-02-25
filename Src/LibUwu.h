@@ -429,8 +429,9 @@ static inline std::string MakeUwu(std::string boringString) {
     }
     boringString = ss.str();
 
-    // Also replace some ascii-"emojis'
-    // TODO: Find them individually, and choose a random boykisser chatter invidually
+    // Also, replace some ascii-"emojis'
+    // TODO: Find them individually, and choose a random boykisser chatter emote for each single occurence, rather than replacing
+    // all occurences by the same emote, or none at all.
     boringString = StringTools::Replace(boringString, "^^", "^_^");
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":)", ":3", ValidatorFindingIsCompleteWordAt50Percent);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, ":)", "x3", ValidatorFindingIsCompleteWordAt50Percent);

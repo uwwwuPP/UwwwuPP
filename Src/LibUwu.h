@@ -157,6 +157,11 @@ static inline auto ValidatorStutter(const std::string& original, const std::stri
     if ((!isFirstChar) && (CharTools::IsLetter(lastChar)))
         return false;
 
+    // Also don't replace if the next char is not a letter
+    // This is impowtant to avoid single-letter characters, like "u", as in "you".
+    if (!CharTools::IsLetter(nextChar))
+        return false;
+
     // Initialize deterministic prng
     // Can't initialize one for all scopes, they don't seem to play
     // nicely with being passed to lambda functions...

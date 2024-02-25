@@ -11,7 +11,6 @@
 
 // I stole these from the fastest uwuifier in the west :3 (also added my own)
 std::string boykisserChatter[] = {
-    "(ꈍᴗꈍ)",
     "OwO",
     "UwU",
     "owo",
@@ -72,6 +71,7 @@ std::string boykisserChatter[] = {
     "σωσ",
     "òωó",
     "(U ﹏ U)",
+    "(ꈍᴗꈍ)",
 };
 
 const std::string& getRandomBoykisserChatter(int rand = -1) {
@@ -170,6 +170,63 @@ static inline auto ValidatorStutter(const std::string& original, const std::stri
     return (rng() % 100) < chance;
 }
 
+// The finding is not followed by vowels, which are followed by consunants, which are followed by more vowels, within a word
+// e.g. "this" is ok, "thisi" is not ok
+// also, the current word must begin with 'th', e.g. the char before is word-breaking
+// but does not end with a consonant
+// e.g. "this" is ok, "the" is not ok
+static inline auto ValidatorFindingIsInOnlySyllableAndEndsWithConsunant(const std::string& original, const std::string& finding, const std::size_t index) -> bool {
+    // Quick-accept: Original-string length matches finding-string length
+    if (original.length() == finding.length()) {
+        return true;
+    }
+
+    bool lastCharBreaksWord = true; // Default is true, because this value stays in case there is no last/next char.
+
+    // Check if the last-char is word-breaking, since this is a reject-condition
+    if (index > 0) {
+        lastCharBreaksWord = !CharTools::IsLetter(original[index - 1]);
+    }
+
+    // If the last char does not break the word, reject.
+    if (!lastCharBreaksWord) {
+        return false;
+    }
+
+    const std::size_t indexAfterWord = index + finding.length();
+    bool foundFirstVowel = false;
+    bool foundConsunant = false;
+    for (std::size_t i = index + finding.length(); i < original.length(); i++) {
+        const char c = original[i];
+
+        // If we have any vowel, set this to true
+        if (CharTools::IsVowel(c)) {
+            foundFirstVowel = true; // This can also be set when iterating over a "second-vowel", but then it would already be set to true.
+
+            // If the current syllable is already terminated,
+            // break, since this is a reject-condition.
+            // should be "if (foundFirstVowel && foundConsunant) " (this is the exit condition), but the "foundFirstVowel" can be optimized out.
+            if (foundConsunant) {
+                return false; // This is it, a second syllable has been detected.
+            }
+        }
+
+        // If we have any consunant after finding a vowel, set this to true
+        if (foundFirstVowel && CharTools::IsVowel(c, "qwrtzpsdfghjklxcvbnm")) { // Abusing the 'IsVowel'-method to detect consunants
+            foundConsunant = true;
+        }
+
+        // If we have reached a word-boundary, quick-return
+        if (!CharTools::IsLetter(c)) {
+            return foundConsunant;
+        }
+    }
+
+    // Reject-condition has not been reached.
+    // If we have found a consonant, replace
+    return foundConsunant;
+}
+
 
 //! Will make a boring string look sooper dooper kawaii and cute :3
 static inline std::string MakeUwu(std::string boringString) {
@@ -184,6 +241,7 @@ static inline std::string MakeUwu(std::string boringString) {
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ude", "ood", ValidatorFindingIsEndOfWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ers", "as", ValidatorFindingIsEndOfWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "er", "a", ValidatorFindingIsEndOfWord);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "th", "d", ValidatorFindingIsInOnlySyllableAndEndsWithConsunant);
 
     // Let's do some language adjustments
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "thank you", "ur twe best <3333 xoxo", ValidatorFindingIsCompleteWord);
@@ -217,6 +275,7 @@ static inline std::string MakeUwu(std::string boringString) {
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "inappropriate", "lewd", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "nice", "awwsum", ValidatorFindingIsCompleteWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "nicely", "awwsumly", ValidatorFindingIsCompleteWord);
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "the", "twe", ValidatorFindingIsCompleteWord);
 
     // Let's extend some phonetics
     // These are quite agressive, so don't do them _every time_
@@ -246,36 +305,6 @@ static inline std::string MakeUwu(std::string boringString) {
 
                 // Don't replace if the last char is not a letter
                 if (!CharTools::IsLetter(lastChar))
-                    return false;
-
-                // Else, replace
-                return true;
-            }
-    );
-
-    // Replace C with W, but only if succeeded and preceeded by a vowel
-    boringString = Util::ConditionalReplaceButKeepSigns(
-            boringString,
-            "c",
-            "w",
-            [](const std::string& original, const std::string& finding, const std::size_t index) {
-                // Don't replace, if we are on the last char
-                if (index + finding.length() == original.length())
-                    return false;
-
-                // Don't replace if we're at index 0
-                if (index == 0)
-                    return false;
-
-                const char nextChar = CharTools::MakeLower(original[index + finding.length()]);
-                const char lastChar = CharTools::MakeLower(original[index - 1]);
-
-                // Don't replace, if the next char is not a vowel
-                if (!CharTools::IsVowel(nextChar))
-                    return false;
-
-                // Don't replace if the last char is not a vowel
-                if (!CharTools::IsVowel(lastChar))
                     return false;
 
                 // Else, replace

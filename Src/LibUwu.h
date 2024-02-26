@@ -236,7 +236,17 @@ static inline auto ValidatorFindingIsInOnlySyllableAndEndsWithConsunant(const st
 //! Will make a boring string look sooper dooper kawaii and cute :3
 static inline std::string MakeUwu(std::string boringString) {
     // Easy ones first
-    // none, lol
+    // Skip empty lines
+    std::size_t numWhitespaceCharacters = 0;
+    for (const char c : boringString) {
+        if (c == ' ' || c == '\t') {
+            numWhitespaceCharacters++;
+        }
+    }
+
+    if (numWhitespaceCharacters == boringString.length()) {
+        return boringString;
+    }
 
     // Slightly more complex... Multichar replacements, but we have to keep capitalization...
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ove", "uv");

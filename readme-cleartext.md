@@ -14,8 +14,12 @@ I was looking for an uwwwwwuifier that supported input from
 stdin and from parameters, that doesn't need 500.000 bloated dependencies to work.
 So i made this.
 
-You do have to compile it yourself. I do not fancy providing a hundred different binaries
-for each distribution. But it is really easy.
+## I want to use it
+To use Uwwwu<sup>PP</sup> locally, as a CLI, you do have to compile it yourself.
+But it is really easy. Compile instructions are below.
+
+You can also use Uwwwu<sup>PP</sup> online, there's an uwuifier website using it, and providing a free-to-use rest api.
+Visit [uwu.pm](https://uwu.pm) to quickly try Uwwwu<sup>PP</sup> without having to deal with compiling it.
 
 ## Compile instructions
 To do so, make sure you have cmake installed.

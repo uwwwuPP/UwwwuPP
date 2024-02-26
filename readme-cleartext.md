@@ -25,12 +25,7 @@ Visit [uwu.pm](https://uwu.pm) to quickly try Uwwwu<sup>PP</sup> without having 
 
 ## Compile instructions
 To do so, make sure you have cmake installed.
-Clone this repository, and install all dependencies via:
-```
-$ git submodule update --init --recursive
-```
-
-Then all you have to do is to start the build:
+Clone this repository. Then all you have to do is to start the build:
 ```
 $ cmake Src -B build
 $ cd build

@@ -25,12 +25,7 @@ Visit [uwu.pm](https://uwu.pm) to quickly t-twy Uwwwu<sup>PP</sup> without h-hav
 
 ## Compiwle instwuctions òωó
 T-to do so uhhh make suwe u haf cmake instawwed. UwU
-Clone this repositowwy aaaaaaand install all dependencies via:
-```
-$ git submodule update --init --recursive
-```
-
-Then all u haf to do is to start t-the build:
+Clone this repositowwy. Then all u haf to do is to start t-the build:
 ```
 $ cmake Src -B build
 $ cd build

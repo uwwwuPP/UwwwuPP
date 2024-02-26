@@ -253,6 +253,7 @@ static inline std::string MakeUwu(std::string boringString) {
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "have", "haf");
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "tr", "tw");
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "up", "uwp");
+    boringString = Util::ConditionalReplaceButKeepSigns(boringString, "oy", "oi");
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ude", "ood", ValidatorFindingIsEndOfWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "ers", "as", ValidatorFindingIsEndOfWord);
     boringString = Util::ConditionalReplaceButKeepSigns(boringString, "er", "a", ValidatorFindingIsEndOfWord);

@@ -14,7 +14,7 @@ I was looking for an uwwwwwuifia that suwpported input fwom stdin and fwom pawam
 So i made this xoxo ^\_^ xD mya
 U do haf to compiwle it urself. I do not fancy pwoviding a hundwed d-diffewent binawies for each distwibution. But it i-is reawwy easy. ^\_^
 
-## I want to use it
+## I want to use it (ˆ ﻌ ˆ)♡
 To use Uwwwu<sup>PP</sup> locawwy uhhh as a CLI uhhh u do haf to compiwle it urself. ^.^
 But i-it is reawwy easy. Compiwle instwuctions awe bewlow. (ꈍᴗꈍ)
 

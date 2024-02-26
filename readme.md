@@ -21,7 +21,7 @@ But i-it is reawwy easy. Compiwle instwuctions awe bewlow. (ꈍᴗꈍ)
 U can also use Uwwwu<sup>PP</sup> online uhhh thewe's an uwuifia w-website using it a-aaaaaaand pwoviding a fwee-to-use rest api. o.o
 Visit [uwu.pm](https://uwu.pm) to quickly t-twy Uwwwu<sup>PP</sup> without h-having to deal with compiwling it. \*.\*
 
-**[\[Try online now OwO\]](https://uwu.pm)**
+**[Try online now OwO](https://uwu.pm)**
 
 ## Compiwle instwuctions òωó
 T-to do so uhhh make suwe u haf cmake instawwed. UwU

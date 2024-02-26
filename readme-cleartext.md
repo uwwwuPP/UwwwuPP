@@ -21,6 +21,8 @@ But it is really easy. Compile instructions are below.
 You can also use Uwwwu<sup>PP</sup> online, there's an uwuifier website using it, and providing a free-to-use rest api.
 Visit [uwu.pm](https://uwu.pm) to quickly try Uwwwu<sup>PP</sup> without having to deal with compiling it.
 
+**[uwu.pm](\[Try online now\])**
+
 ## Compile instructions
 To do so, make sure you have cmake installed.
 Clone this repository, and install all dependencies via:

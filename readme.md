@@ -19,7 +19,9 @@ To use Uwwwu<sup>PP</sup> locawwy uhhh as a CLI uhhh u do haf to compiwle it urs
 But i-it is reawwy easy. Compiwle instwuctions awe bewlow. (ꈍᴗꈍ)
 
 U can also use Uwwwu<sup>PP</sup> online uhhh thewe's an uwuifia w-website using it a-aaaaaaand pwoviding a fwee-to-use rest api. o.o
-Visit [uwu.pm](https://uwu.pm) to quickly t-twy Uwwwu<sup>PP</sup> without h-having to deal with compiwling it. *.*
+Visit [uwu.pm](https://uwu.pm) to quickly t-twy Uwwwu<sup>PP</sup> without h-having to deal with compiwling it. \*.\*
+
+**[uwu.pm](\[Twy online now OwO\])**
 
 ## Compiwle instwuctions òωó
 T-to do so uhhh make suwe u haf cmake instawwed. UwU
